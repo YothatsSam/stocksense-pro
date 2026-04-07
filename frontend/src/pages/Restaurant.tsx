@@ -18,7 +18,6 @@ export default function Restaurant() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [showForm, setShowForm] = useState(false)
-  const [serveError, setServeError] = useState<string | null>(null)
 
   const fetchAll = useCallback(async () => {
     try {
@@ -37,13 +36,8 @@ export default function Restaurant() {
   useEffect(() => { fetchAll() }, [fetchAll])
 
   async function handleServe(id: number) {
-    setServeError(null)
-    try {
-      await serveRecipe(id)
-      await fetchAll()
-    } catch (err) {
-      setServeError(err instanceof Error ? err.message : 'Failed to serve dish.')
-    }
+    await serveRecipe(id)
+    await fetchAll()
   }
 
   return (
@@ -91,12 +85,6 @@ export default function Restaurant() {
           </button>
         </div>
 
-        {serveError && (
-          <div className="rounded-lg border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-700">
-            {serveError}
-          </div>
-        )}
-
         {error && (
           <div className="rounded-lg border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-700">
             {error}
@@ -125,6 +113,7 @@ export default function Restaurant() {
                 recipe={recipe}
                 onServe={() => handleServe(recipe.id)}
               />
+
             ))}
           </div>
         )}
@@ -135,11 +124,33 @@ export default function Restaurant() {
 
 // ─── Recipe Card ────────────────────────────────────────────────────────────
 
-function RecipeCard({ recipe, onServe }: { recipe: Recipe; onServe: () => void }) {
+function RecipeCard({ recipe, onServe }: { recipe: Recipe; onServe: () => Promise<void> }) {
+  const [serving, setServing] = useState(false)
+  const [success, setSuccess] = useState(false)
+  const [serveError, setServeError] = useState<string | null>(null)
+
   const hasLowIngredient = recipe.ingredients.some((i) => i.is_low)
-  const canServe = recipe.ingredients.every(
-    (i) => i.stock_quantity !== null && Number(i.stock_quantity) >= Number(i.quantity_required)
+
+  // Insufficient = explicitly not enough stock. Unknown (null) is allowed through to
+  // the backend, which will return a 409 with a clear message if stock is missing.
+  const hasInsufficientStock = recipe.ingredients.some(
+    (i) => i.stock_quantity !== null && Number(i.stock_quantity) < Number(i.quantity_required)
   )
+
+  async function handleClick() {
+    setServeError(null)
+    setSuccess(false)
+    setServing(true)
+    try {
+      await onServe()
+      setSuccess(true)
+      setTimeout(() => setSuccess(false), 3000)
+    } catch (err) {
+      setServeError(err instanceof Error ? err.message : 'Failed to serve dish.')
+    } finally {
+      setServing(false)
+    }
+  }
 
   return (
     <div className={`overflow-hidden rounded-xl border bg-white shadow-sm ${hasLowIngredient ? 'border-orange-200' : 'border-gray-200'}`}>
@@ -189,14 +200,24 @@ function RecipeCard({ recipe, onServe }: { recipe: Recipe; onServe: () => void }
         </table>
       </div>
 
-      <div className="border-t px-5 py-3">
+      <div className="border-t px-5 py-3 space-y-2">
+        {success && (
+          <p className="rounded-lg bg-green-50 px-3 py-2 text-center text-sm font-medium text-green-700">
+            Dish served — stock updated
+          </p>
+        )}
+        {serveError && (
+          <p className="rounded-lg bg-red-50 px-3 py-2 text-center text-sm text-red-700">
+            {serveError}
+          </p>
+        )}
         <button
-          onClick={onServe}
-          disabled={!canServe}
+          onClick={handleClick}
+          disabled={serving || hasInsufficientStock}
           className="w-full rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-40"
-          title={!canServe ? 'Insufficient stock to serve this dish' : undefined}
+          title={hasInsufficientStock ? 'Insufficient stock to serve this dish' : undefined}
         >
-          Serve dish
+          {serving ? 'Serving...' : 'Serve dish'}
         </button>
       </div>
     </div>
