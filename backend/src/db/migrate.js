@@ -63,6 +63,35 @@ CREATE TABLE IF NOT EXISTS purchase_orders (
   created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+-- Users (auth)
+CREATE TABLE IF NOT EXISTS users (
+  id            SERIAL PRIMARY KEY,
+  email         VARCHAR(255) NOT NULL UNIQUE,
+  password_hash TEXT         NOT NULL,
+  role          VARCHAR(50)  NOT NULL DEFAULT 'admin',
+  created_at    TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+);
+
+-- Recipes (restaurant module)
+CREATE TABLE IF NOT EXISTS recipes (
+  id          SERIAL PRIMARY KEY,
+  name        VARCHAR(255) NOT NULL,
+  location_id INT          NOT NULL REFERENCES locations(id) ON DELETE CASCADE,
+  created_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+);
+
+-- Recipe Ingredients
+CREATE TABLE IF NOT EXISTS recipe_ingredients (
+  id                SERIAL PRIMARY KEY,
+  recipe_id         INT           NOT NULL REFERENCES recipes(id)   ON DELETE CASCADE,
+  product_id        INT           NOT NULL REFERENCES products(id)  ON DELETE CASCADE,
+  quantity_required NUMERIC(12,3) NOT NULL,
+  UNIQUE (recipe_id, product_id)
+);
+
+-- unit_cost on products (for food cost % calculation)
+ALTER TABLE products ADD COLUMN IF NOT EXISTS unit_cost NUMERIC(10,2) NOT NULL DEFAULT 0;
 `
 
 async function migrate() {

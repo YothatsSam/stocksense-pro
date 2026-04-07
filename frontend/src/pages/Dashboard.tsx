@@ -1,11 +1,14 @@
 import { useCallback, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { adjustStock, getAlerts, getStock } from '../api/client'
 import AlertsBanner from '../components/AlertsBanner'
 import AdjustModal from '../components/AdjustModal'
 import StockTable from '../components/StockTable'
+import { useAuth } from '../context/AuthContext'
 import type { Alert, AdjustPayload, StockLevel } from '../types'
 
 export default function Dashboard() {
+  const { userEmail, signOut } = useAuth()
   const [stock, setStock] = useState<StockLevel[]>([])
   const [alerts, setAlerts] = useState<Alert[]>([])
   const [loading, setLoading] = useState(true)
@@ -46,16 +49,38 @@ export default function Dashboard() {
       {/* Top nav */}
       <header className="border-b bg-white shadow-sm">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <div>
-            <h1 className="text-xl font-bold text-gray-900">StockSense Pro</h1>
-            <p className="text-xs text-gray-400">Inventory optimisation platform</p>
+          <div className="flex items-center gap-6">
+            <div>
+              <h1 className="text-xl font-bold text-gray-900">StockSense Pro</h1>
+              <p className="text-xs text-gray-400">Inventory optimisation platform</p>
+            </div>
+            <nav className="flex items-center gap-1">
+              <span className="rounded-lg bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-800">
+                Dashboard
+              </span>
+              <Link
+                to="/restaurant"
+                className="rounded-lg px-3 py-1.5 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
+              >
+                Restaurant
+              </Link>
+            </nav>
           </div>
-          <button
-            onClick={fetchAll}
-            className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50"
-          >
-            Refresh
-          </button>
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-gray-400">{userEmail}</span>
+            <button
+              onClick={fetchAll}
+              className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50"
+            >
+              Refresh
+            </button>
+            <button
+              onClick={signOut}
+              className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50"
+            >
+              Logout
+            </button>
+          </div>
         </div>
       </header>
 

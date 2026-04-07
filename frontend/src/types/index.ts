@@ -22,3 +22,45 @@ export interface AdjustPayload {
   quantity_change: number
   reason?: string
 }
+
+export interface AuthResponse {
+  token: string
+  email: string
+  role: string
+}
+
+export interface Product {
+  id: number
+  sku: string
+  name: string
+  unit: string
+  unit_cost: string
+}
+
+export interface RecipeIngredient {
+  id: number
+  product_id: number
+  product_name: string
+  sku: string
+  unit: string
+  unit_cost: string
+  quantity_required: string
+  stock_quantity: string | null
+  reorder_point: string | null
+  is_low: boolean
+}
+
+export interface Recipe {
+  id: number
+  name: string
+  location_id: number
+  location_name: string
+  ingredients: RecipeIngredient[]
+  food_cost: number
+}
+
+export interface Location {
+  id: number
+  name: string
+  business_type: string
+}

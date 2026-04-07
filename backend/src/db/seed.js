@@ -1,5 +1,6 @@
 require('dotenv').config()
 const { Pool } = require('pg')
+const bcrypt = require('bcrypt')
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL })
 
@@ -128,6 +129,17 @@ async function seed() {
       stockInserted += result.rowCount
     }
     console.log(`Inserted ${stockInserted} stock level rows`)
+
+    // Admin user
+    const passwordHash = await bcrypt.hash('admin123', 10)
+    const { rowCount: userCount } = await client.query(
+      `INSERT INTO users (email, password_hash, role)
+       VALUES ($1, $2, 'admin')
+       ON CONFLICT (email) DO NOTHING`,
+      ['admin@stocksense.com', passwordHash]
+    )
+    if (userCount) console.log('Created admin user: admin@stocksense.com / admin123')
+    else console.log('Admin user already exists — skipped')
 
     await client.query('COMMIT')
     console.log('Seed complete.')

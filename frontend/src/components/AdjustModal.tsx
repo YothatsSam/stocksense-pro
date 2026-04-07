@@ -9,7 +9,7 @@ interface Props {
 
 export default function AdjustModal({ item, onClose, onSave }: Props) {
   const [quantityChange, setQuantityChange] = useState('')
-  const [reason, setReason] = useState('')
+  const [reason, setReason] = useState('received')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -23,7 +23,7 @@ export default function AdjustModal({ item, onClose, onSave }: Props) {
     setLoading(true)
     setError(null)
     try {
-      await onSave(delta, reason || 'manual adjustment')
+      await onSave(delta, reason)
       onClose()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to adjust stock.')
@@ -69,16 +69,17 @@ export default function AdjustModal({ item, onClose, onSave }: Props) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Reason <span className="text-gray-400">(optional)</span>
-            </label>
-            <input
-              type="text"
+            <label className="block text-sm font-medium text-gray-700">Reason</label>
+            <select
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              placeholder="e.g. delivery received, stock count"
               className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-            />
+            >
+              <option value="received">Received</option>
+              <option value="sold">Sold</option>
+              <option value="damaged">Damaged</option>
+              <option value="correction">Correction</option>
+            </select>
           </div>
 
           {error && (

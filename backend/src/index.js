@@ -3,6 +3,9 @@ const express = require('express')
 const cors = require('cors')
 const stockRoutes = require('./routes/stock')
 const alertsRoutes = require('./routes/alerts')
+const authRoutes = require('./routes/auth')
+const restaurantRoutes = require('./routes/restaurant')
+const requireAuth = require('./middleware/auth')
 const errorHandler = require('./middleware/errorHandler')
 
 const app = express()
@@ -11,9 +14,13 @@ const PORT = process.env.PORT || 3001
 app.use(cors())
 app.use(express.json())
 
-// Routes
-app.use('/api/stock',  stockRoutes)
-app.use('/api/alerts', alertsRoutes)
+// Public routes
+app.use('/api/auth', authRoutes)
+
+// Protected routes
+app.use('/api/stock',      requireAuth, stockRoutes)
+app.use('/api/alerts',     requireAuth, alertsRoutes)
+app.use('/api/restaurant', requireAuth, restaurantRoutes)
 
 // Health check
 app.get('/api/health', (_req, res) => res.json({ status: 'ok' }))
