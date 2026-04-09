@@ -6,13 +6,22 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+      },
       colors: {
         brand: {
-          50:  '#f0f9ff',
-          100: '#e0f2fe',
-          500: '#0ea5e9',
-          600: '#0284c7',
-          700: '#0369a1',
+          50:  '#eff6ff',
+          100: '#dbeafe',
+          400: '#60a5fa',
+          500: '#3B82F6',
+          600: '#2563EB',
+          700: '#1D4ED8',
+        },
+        navy: {
+          900: '#0F172A',
+          800: '#1E293B',
+          700: '#334155',
         },
       },
     },

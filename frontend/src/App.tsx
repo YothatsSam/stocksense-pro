@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
+import Layout from './components/Layout'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Restaurant from './pages/Restaurant'
@@ -17,7 +18,9 @@ function AppRoutes() {
         path="/"
         element={
           <ProtectedRoute>
-            <Dashboard />
+            <Layout>
+              <Dashboard />
+            </Layout>
           </ProtectedRoute>
         }
       />
@@ -25,7 +28,9 @@ function AppRoutes() {
         path="/restaurant"
         element={
           <ProtectedRoute>
-            <Restaurant />
+            <Layout>
+              <Restaurant />
+            </Layout>
           </ProtectedRoute>
         }
       />
