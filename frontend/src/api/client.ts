@@ -1,6 +1,6 @@
 import type { AdjustPayload, Alert, AuthResponse, Product, Recipe, StockLevel } from '../types'
 
-const BASE = '/api'
+const BASE = `${import.meta.env.VITE_API_URL ?? 'http://localhost:3001'}/api`
 
 function getToken() {
   return localStorage.getItem('token')
@@ -69,7 +69,7 @@ export const serveRecipe = (id: number) =>
 export const getRestaurantProducts = () => request<Product[]>('/restaurant/products')
 
 export const getLocations = () =>
-  request<{ id: number; name: string; business_type: string }[]>('/stock').then((rows) => {
+  request<StockLevel[]>('/stock').then((rows) => {
     const seen = new Set<number>()
     return rows
       .filter((r) => {
