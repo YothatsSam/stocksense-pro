@@ -11,18 +11,19 @@ export default {
       },
       colors: {
         brand: {
-          50:  '#eff6ff',
-          100: '#dbeafe',
-          400: '#60a5fa',
           500: '#3B82F6',
           600: '#2563EB',
           700: '#1D4ED8',
         },
-        navy: {
-          900: '#0F172A',
-          800: '#1E293B',
-          700: '#334155',
-        },
+        sidebar: '#111111',
+      },
+      borderRadius: {
+        DEFAULT: '8px',
+      },
+      boxShadow: {
+        card: '0 1px 3px 0 rgba(0,0,0,0.06), 0 1px 2px -1px rgba(0,0,0,0.04)',
+        'card-hover': '0 4px 12px 0 rgba(0,0,0,0.08), 0 2px 4px -1px rgba(0,0,0,0.04)',
+        login: '0 20px 60px -12px rgba(0,0,0,0.18)',
       },
     },
   },
