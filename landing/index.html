@@ -1,0 +1,1904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StockSense Pro — Inventory Intelligence for Modern Businesses</title>
+  <meta name="description" content="Real-time inventory management for restaurants, retail chains and distribution centres. Never run out of stock again." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:        #3B82F6;
+      --blue-dark:   #2563EB;
+      --blue-light:  #60A5FA;
+      --dark:        #0F172A;
+      --dark-2:      #1E293B;
+      --dark-3:      #334155;
+      --grey-bg:     #F8FAFC;
+      --grey-border: #E2E8F0;
+      --text-primary:#0F172A;
+      --text-muted:  #64748B;
+      --text-light:  #94A3B8;
+      --white:       #FFFFFF;
+      --radius-sm:   8px;
+      --radius-md:   12px;
+      --radius-lg:   16px;
+      --radius-xl:   24px;
+      --shadow-sm:   0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.05);
+      --shadow-md:   0 4px 16px rgba(0,0,0,.08), 0 2px 6px rgba(0,0,0,.05);
+      --shadow-lg:   0 20px 60px rgba(0,0,0,.12), 0 8px 24px rgba(0,0,0,.08);
+      --shadow-blue: 0 8px 32px rgba(59,130,246,.35);
+      --transition:  150ms cubic-bezier(.4,0,.2,1);
+    }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text-primary);
+      background: var(--white);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { text-decoration: none; color: inherit; }
+    img { display: block; max-width: 100%; }
+    ul { list-style: none; }
+
+    /* ─── Utilities ─────────────────────────────────────────────────────── */
+    .container {
+      width: 100%;
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 9999px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all var(--transition);
+      white-space: nowrap;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: var(--white);
+      box-shadow: var(--shadow-blue);
+    }
+    .btn-primary:hover {
+      background: var(--blue-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 12px 40px rgba(59,130,246,.45);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--white);
+      border: 1.5px solid rgba(255,255,255,.35);
+    }
+    .btn-outline:hover {
+      background: rgba(255,255,255,.08);
+      border-color: rgba(255,255,255,.6);
+      transform: translateY(-1px);
+    }
+
+    .btn-outline-dark {
+      background: transparent;
+      color: var(--text-primary);
+      border: 1.5px solid var(--grey-border);
+    }
+    .btn-outline-dark:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+      transform: translateY(-1px);
+    }
+
+    .btn-lg { padding: 16px 36px; font-size: 16px; }
+    .btn-sm { padding: 9px 18px; font-size: 14px; }
+
+    /* ─── Fade-in Animation ─────────────────────────────────────────────── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.65s cubic-bezier(.4,0,.2,1),
+                  transform 0.65s cubic-bezier(.4,0,.2,1);
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-up.delay-1 { transition-delay: 0.1s; }
+    .fade-up.delay-2 { transition-delay: 0.2s; }
+    .fade-up.delay-3 { transition-delay: 0.3s; }
+    .fade-up.delay-4 { transition-delay: 0.4s; }
+    .fade-up.delay-5 { transition-delay: 0.5s; }
+    .fade-up.delay-6 { transition-delay: 0.6s; }
+
+    /* ─── Section Labels ────────────────────────────────────────────────── */
+    .section-label {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 14px;
+    }
+
+    .section-headline {
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 800;
+      line-height: 1.18;
+      letter-spacing: -.025em;
+      color: var(--text-primary);
+    }
+
+    .section-headline-light { color: var(--white); }
+
+    .section-sub {
+      font-size: 18px;
+      color: var(--text-muted);
+      line-height: 1.65;
+      max-width: 580px;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════
+       1. NAVBAR
+    ═══════════════════════════════════════════════════════════════════ */
+    #navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      transition: background var(--transition), box-shadow var(--transition), backdrop-filter var(--transition);
+      padding: 0;
+    }
+
+    #navbar.scrolled {
+      background: rgba(255,255,255,.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 1px 0 rgba(0,0,0,.06);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--white);
+      transition: color var(--transition);
+    }
+
+    #navbar.scrolled .nav-logo { color: var(--text-primary); }
+
+    .logo-mark {
+      width: 34px;
+      height: 34px;
+      background: var(--blue);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+      color: white;
+      letter-spacing: -.03em;
+      flex-shrink: 0;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+    }
+
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: rgba(255,255,255,.75);
+      transition: color var(--transition);
+    }
+
+    .nav-links a:hover { color: var(--white); }
+
+    #navbar.scrolled .nav-links a { color: var(--text-muted); }
+    #navbar.scrolled .nav-links a:hover { color: var(--text-primary); }
+
+    .nav-cta { display: flex; align-items: center; gap: 12px; }
+
+    .nav-login {
+      font-size: 14px;
+      font-weight: 500;
+      color: rgba(255,255,255,.75);
+      transition: color var(--transition);
+      padding: 8px 12px;
+    }
+
+    #navbar.scrolled .nav-login { color: var(--text-muted); }
+    #navbar.scrolled .nav-login:hover { color: var(--text-primary); }
+    .nav-login:hover { color: var(--white); }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 8px;
+      background: none;
+      border: none;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--white);
+      border-radius: 2px;
+      transition: all var(--transition);
+    }
+    #navbar.scrolled .hamburger span { background: var(--text-primary); }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 68px;
+      left: 0;
+      right: 0;
+      background: var(--white);
+      box-shadow: var(--shadow-lg);
+      padding: 24px;
+      flex-direction: column;
+      gap: 16px;
+      z-index: 999;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-primary);
+      padding: 10px 0;
+      border-bottom: 1px solid var(--grey-border);
+    }
+    .mobile-menu a:last-child { border-bottom: none; }
+
+    /* ═══════════════════════════════════════════════════════════════════
+       2. HERO
+    ═══════════════════════════════════════════════════════════════════ */
+    #hero {
+      background: var(--dark);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 0 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Subtle grid overlay */
+    #hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+      background-size: 64px 64px;
+      pointer-events: none;
+    }
+
+    /* Glow blobs */
+    #hero::after {
+      content: '';
+      position: absolute;
+      top: -200px;
+      right: -100px;
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(circle, rgba(59,130,246,.18) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .hero-glow-2 {
+      position: absolute;
+      bottom: -150px;
+      left: -100px;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(99,102,241,.12) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(59,130,246,.15);
+      border: 1px solid rgba(59,130,246,.3);
+      color: var(--blue-light);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 16px;
+      border-radius: 9999px;
+      margin-bottom: 32px;
+      letter-spacing: .01em;
+    }
+
+    .hero-badge-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--blue);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .6; transform: scale(.85); }
+    }
+
+    .hero-headline {
+      font-size: clamp(40px, 6vw, 64px);
+      font-weight: 900;
+      line-height: 1.06;
+      letter-spacing: -.04em;
+      color: var(--white);
+      margin-bottom: 24px;
+    }
+
+    .hero-headline span {
+      background: linear-gradient(135deg, #60A5FA 0%, #818CF8 50%, #C084FC 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: clamp(16px, 2vw, 19px);
+      color: rgba(255,255,255,.6);
+      line-height: 1.65;
+      max-width: 640px;
+      margin: 0 auto 40px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 72px;
+    }
+
+    /* Dashboard Mockup */
+    .dashboard-mockup {
+      position: relative;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .browser-chrome {
+      background: #1E293B;
+      border-radius: 14px 14px 0 0;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid rgba(255,255,255,.08);
+      border-bottom: none;
+    }
+
+    .browser-dots { display: flex; gap: 7px; }
+    .browser-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .browser-dot:nth-child(1) { background: #FF5F57; }
+    .browser-dot:nth-child(2) { background: #FEBC2E; }
+    .browser-dot:nth-child(3) { background: #28C840; }
+
+    .browser-bar {
+      flex: 1;
+      background: rgba(255,255,255,.07);
+      border-radius: 6px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      font-size: 12px;
+      color: rgba(255,255,255,.35);
+      gap: 8px;
+    }
+
+    .browser-bar-dot {
+      width: 8px;
+      height: 8px;
+      background: #28C840;
+      border-radius: 50%;
+    }
+
+    .dashboard-body {
+      background: #0D1B30;
+      border: 1px solid rgba(255,255,255,.08);
+      border-top: none;
+      border-radius: 0 0 14px 14px;
+      overflow: hidden;
+    }
+
+    .dash-layout {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      min-height: 380px;
+    }
+
+    .dash-sidebar {
+      background: #0A1628;
+      border-right: 1px solid rgba(255,255,255,.06);
+      padding: 20px 0;
+    }
+
+    .dash-sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 16px 20px;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      margin-bottom: 12px;
+    }
+
+    .dash-sidebar-logo-mark {
+      width: 26px;
+      height: 26px;
+      background: var(--blue);
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 800;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .dash-sidebar-logo span {
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(255,255,255,.85);
+    }
+
+    .dash-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 16px;
+      font-size: 12px;
+      color: rgba(255,255,255,.4);
+      cursor: default;
+    }
+
+    .dash-nav-item.active {
+      background: rgba(59,130,246,.15);
+      color: var(--blue-light);
+      border-right: 2px solid var(--blue);
+    }
+
+    .dash-nav-icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      background: currentColor;
+      opacity: .5;
+    }
+
+    .dash-main { padding: 20px; }
+
+    .dash-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .dash-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: rgba(255,255,255,.9);
+    }
+
+    .dash-date {
+      font-size: 12px;
+      color: rgba(255,255,255,.35);
+    }
+
+    .dash-kpis {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .kpi-card {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 10px;
+      padding: 14px;
+    }
+
+    .kpi-label {
+      font-size: 10px;
+      color: rgba(255,255,255,.35);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-bottom: 6px;
+    }
+
+    .kpi-value {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -.02em;
+    }
+
+    .kpi-change {
+      font-size: 10px;
+      margin-top: 4px;
+    }
+    .kpi-change.up { color: #10B981; }
+    .kpi-change.down { color: #EF4444; }
+
+    .dash-bottom {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .dash-panel {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 10px;
+      padding: 14px;
+    }
+
+    .dash-panel-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255,255,255,.5);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-bottom: 12px;
+    }
+
+    .alert-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 0;
+      border-bottom: 1px solid rgba(255,255,255,.04);
+    }
+    .alert-item:last-child { border-bottom: none; }
+
+    .alert-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .alert-dot.red { background: #EF4444; }
+    .alert-dot.amber { background: #F59E0B; }
+    .alert-dot.green { background: #10B981; }
+
+    .alert-name { font-size: 11px; color: rgba(255,255,255,.65); flex: 1; }
+    .alert-qty {
+      font-size: 11px;
+      font-weight: 700;
+      color: rgba(255,255,255,.9);
+    }
+
+    .mini-bar-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .mini-bar-label { font-size: 10px; color: rgba(255,255,255,.45); width: 80px; flex-shrink: 0; }
+    .mini-bar-track {
+      flex: 1;
+      height: 6px;
+      background: rgba(255,255,255,.07);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .mini-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: linear-gradient(90deg, var(--blue) 0%, #818CF8 100%);
+    }
+    .mini-bar-pct { font-size: 10px; color: rgba(255,255,255,.5); width: 28px; text-align: right; }
+
+    .mockup-shadow {
+      position: absolute;
+      bottom: -60px;
+      left: 10%;
+      right: 10%;
+      height: 60px;
+      background: radial-gradient(ellipse, rgba(59,130,246,.3) 0%, transparent 70%);
+      filter: blur(20px);
+      pointer-events: none;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════
+       3. SOCIAL PROOF BAR
+    ═══════════════════════════════════════════════════════════════════ */
+    #social-proof {
+      background: #F1F5F9;
+      padding: 40px 0;
+      border-top: 1px solid var(--grey-border);
+      border-bottom: 1px solid var(--grey-border);
+    }
+
+    .proof-inner {
+      text-align: center;
+    }
+
+    .proof-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      margin-bottom: 24px;
+    }
+
+    .proof-logos {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+
+    .proof-logo {
+      font-size: 15px;
+      font-weight: 700;
+      color: #94A3B8;
+      letter-spacing: -.02em;
+      transition: color var(--transition);
+      cursor: default;
+    }
+
+    .proof-logo:hover { color: #64748B; }
+
+    /* ═══════════════════════════════════════════════════════════════════
+       4. PROBLEM SECTION
+    ═══════════════════════════════════════════════════════════════════ */
+    #problem {
+      background: var(--white);
+      padding: 100px 0;
+    }
+
+    .section-header { margin-bottom: 56px; }
+    .section-header.center { text-align: center; }
+    .section-header.center .section-sub { margin-left: auto; margin-right: auto; }
+
+    .problem-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .problem-card {
+      background: var(--white);
+      border: 1px solid var(--grey-border);
+      border-radius: var(--radius-lg);
+      padding: 36px 32px;
+      transition: box-shadow var(--transition), transform var(--transition);
+    }
+
+    .problem-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-4px);
+    }
+
+    .problem-icon {
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+
+    .problem-card h3 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.35;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════
+       5. FEATURES SECTION
+    ═══════════════════════════════════════════════════════════════════ */
+    #features {
+      background: var(--grey-bg);
+      padding: 100px 0;
+      border-top: 1px solid var(--grey-border);
+      border-bottom: 1px solid var(--grey-border);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .feature-card {
+      background: var(--white);
+      border: 1px solid var(--grey-border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      transition: box-shadow var(--transition), transform var(--transition), border-color var(--transition);
+    }
+
+    .feature-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-3px);
+      border-color: rgba(59,130,246,.25);
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(59,130,246,.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    .feature-card h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+      letter-spacing: -.01em;
+    }
+
+    .feature-card p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════
+       6. HOW IT WORKS
+    ═══════════════════════════════════════════════════════════════════ */
+    #how-it-works {
+      background: var(--white);
+      padding: 100px 0;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      position: relative;
+    }
+
+    .steps-grid::before {
+      content: '';
+      position: absolute;
+      top: 28px;
+      left: calc(16.66% + 20px);
+      right: calc(16.66% + 20px);
+      height: 2px;
+      background: linear-gradient(90deg, var(--blue) 0%, #818CF8 100%);
+      z-index: 0;
+    }
+
+    .step-card { text-align: center; position: relative; z-index: 1; }
+
+    .step-number {
+      width: 56px;
+      height: 56px;
+      background: var(--blue);
+      border-radius: 50%;
+      color: var(--white);
+      font-size: 18px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      box-shadow: var(--shadow-blue);
+    }
+
+    .step-card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      letter-spacing: -.01em;
+    }
+
+    .step-card p {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════
+       7. TESTIMONIALS
+    ═══════════════════════════════════════════════════════════════════ */
+    #testimonials {
+      background: var(--dark);
+      padding: 100px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #testimonials::before {
+      content: '';
+      position: absolute;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 500px;
+      background: radial-gradient(ellipse, rgba(59,130,246,.12) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .testimonial-card {
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      transition: background var(--transition), border-color var(--transition), transform var(--transition);
+    }
+
+    .testimonial-card:hover {
+      background: rgba(255,255,255,.08);
+      border-color: rgba(59,130,246,.3);
+      transform: translateY(-3px);
+    }
+
+    .stars {
+      color: #FBBF24;
+      font-size: 15px;
+      letter-spacing: 2px;
+      margin-bottom: 20px;
+    }
+
+    .testimonial-card blockquote {
+      font-size: 15px;
+      color: rgba(255,255,255,.8);
+      line-height: 1.7;
+      font-style: italic;
+      margin-bottom: 24px;
+    }
+
+    .testimonial-author { display: flex; align-items: center; gap: 12px; }
+
+    .author-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--white);
+      flex-shrink: 0;
+    }
+
+    .author-info {}
+
+    .author-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--white);
+    }
+
+    .author-role {
+      font-size: 13px;
+      color: rgba(255,255,255,.4);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════
+       8. PRICING
+    ═══════════════════════════════════════════════════════════════════ */
+    #pricing {
+      background: var(--white);
+      padding: 100px 0;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .pricing-card {
+      border: 1px solid var(--grey-border);
+      border-radius: var(--radius-xl);
+      padding: 36px 32px;
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow var(--transition), transform var(--transition);
+      position: relative;
+    }
+
+    .pricing-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-4px);
+    }
+
+    .pricing-card.popular {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 1px var(--blue), var(--shadow-lg);
+      transform: scale(1.03);
+    }
+
+    .pricing-card.popular:hover { transform: scale(1.03) translateY(-4px); }
+
+    .popular-badge {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--blue);
+      color: var(--white);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 5px 16px;
+      border-radius: 9999px;
+      white-space: nowrap;
+      letter-spacing: .03em;
+    }
+
+    .pricing-tier {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .pricing-tier.blue { color: var(--blue); }
+
+    .pricing-price {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      margin-bottom: 6px;
+    }
+
+    .price-currency {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .price-amount {
+      font-size: 48px;
+      font-weight: 900;
+      color: var(--text-primary);
+      letter-spacing: -.04em;
+      line-height: 1;
+    }
+
+    .price-period {
+      font-size: 15px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .pricing-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+
+    .pricing-divider {
+      height: 1px;
+      background: var(--grey-border);
+      margin-bottom: 24px;
+    }
+
+    .pricing-features { flex: 1; margin-bottom: 32px; }
+
+    .pricing-feature {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 8px 0;
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+
+    .check-icon {
+      width: 18px;
+      height: 18px;
+      background: rgba(59,130,246,.12);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .check-icon::after {
+      content: '✓';
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--blue);
+    }
+
+    .pricing-btn { display: block; text-align: center; width: 100%; }
+
+    /* ═══════════════════════════════════════════════════════════════════
+       9. FAQ
+    ═══════════════════════════════════════════════════════════════════ */
+    #faq {
+      background: var(--grey-bg);
+      padding: 100px 0;
+      border-top: 1px solid var(--grey-border);
+      border-bottom: 1px solid var(--grey-border);
+    }
+
+    .faq-list { max-width: 720px; margin: 0 auto; }
+
+    .faq-item {
+      border-bottom: 1px solid var(--grey-border);
+    }
+
+    .faq-question {
+      width: 100%;
+      background: none;
+      border: none;
+      text-align: left;
+      padding: 24px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      transition: color var(--transition);
+    }
+
+    .faq-question:hover { color: var(--blue); }
+
+    .faq-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(59,130,246,.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background var(--transition), transform var(--transition);
+    }
+
+    .faq-icon svg {
+      width: 14px;
+      height: 14px;
+      stroke: var(--blue);
+      fill: none;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      transition: transform var(--transition);
+    }
+
+    .faq-item.open .faq-icon { background: var(--blue); }
+    .faq-item.open .faq-icon svg { stroke: white; transform: rotate(180deg); }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(.4,0,.2,1), padding 0.3s;
+    }
+
+    .faq-item.open .faq-answer { max-height: 200px; }
+
+    .faq-answer p {
+      padding-bottom: 24px;
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════
+       10. FINAL CTA
+    ═══════════════════════════════════════════════════════════════════ */
+    #final-cta {
+      background: var(--dark);
+      padding: 120px 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #final-cta::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      width: 800px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(59,130,246,.2) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .cta-content { position: relative; z-index: 1; }
+
+    #final-cta h2 {
+      font-size: clamp(30px, 5vw, 52px);
+      font-weight: 900;
+      color: var(--white);
+      letter-spacing: -.035em;
+      margin-bottom: 16px;
+    }
+
+    #final-cta p {
+      font-size: 18px;
+      color: rgba(255,255,255,.55);
+      margin-bottom: 40px;
+    }
+
+    .cta-note {
+      margin-top: 20px;
+      font-size: 13px !important;
+      color: rgba(255,255,255,.35) !important;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════
+       11. FOOTER
+    ═══════════════════════════════════════════════════════════════════ */
+    #footer {
+      background: #060E1A;
+      padding: 40px 0;
+      border-top: 1px solid rgba(255,255,255,.06);
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: rgba(255,255,255,.65);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .footer-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .footer-links a {
+      font-size: 14px;
+      color: rgba(255,255,255,.4);
+      transition: color var(--transition);
+    }
+
+    .footer-links a:hover { color: rgba(255,255,255,.8); }
+
+    .footer-copy {
+      font-size: 13px;
+      color: rgba(255,255,255,.25);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════════════════════════════ */
+    @media (max-width: 900px) {
+      .nav-links, .nav-login { display: none; }
+      .nav-cta .btn { display: none; }
+      .hamburger { display: flex; }
+
+      .problem-grid,
+      .features-grid,
+      .steps-grid,
+      .testimonials-grid,
+      .pricing-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .steps-grid::before { display: none; }
+
+      .pricing-card.popular { transform: scale(1); }
+      .pricing-card.popular:hover { transform: translateY(-4px); }
+
+      .dash-kpis { grid-template-columns: repeat(2,1fr); }
+      .dash-bottom { grid-template-columns: 1fr; }
+      .dash-layout { grid-template-columns: 1fr; }
+      .dash-sidebar { display: none; }
+
+      .footer-inner { flex-direction: column; text-align: center; }
+      .footer-links { flex-wrap: wrap; justify-content: center; }
+    }
+
+    @media (max-width: 640px) {
+      .hero-buttons { flex-direction: column; align-items: center; }
+      .proof-logos { gap: 24px; }
+      .dash-kpis { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     1. NAVBAR
+═══════════════════════════════════════════════════════════════════ -->
+<nav id="navbar">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="#hero" class="nav-logo">
+        <div class="logo-mark">SS</div>
+        StockSense Pro
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how-it-works">How it works</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+      </ul>
+
+      <div class="nav-cta">
+        <a href="#pricing" class="nav-login">Login</a>
+        <a href="mailto:demo@stocksensepro.com" class="btn btn-primary btn-sm">Book a Demo</a>
+      </div>
+
+      <button class="hamburger" aria-label="Open menu" onclick="toggleMobileMenu()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#features" onclick="closeMobileMenu()">Features</a>
+  <a href="#how-it-works" onclick="closeMobileMenu()">How it works</a>
+  <a href="#pricing" onclick="closeMobileMenu()">Pricing</a>
+  <a href="#pricing" onclick="closeMobileMenu()">Login</a>
+  <a href="mailto:demo@stocksensepro.com" onclick="closeMobileMenu()" class="btn btn-primary" style="width:100%;justify-content:center;border-radius:10px;">Book a Demo</a>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     2. HERO
+═══════════════════════════════════════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-glow-2"></div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-badge fade-up">
+        <span class="hero-badge-dot"></span>
+        Trusted by restaurants &amp; retailers
+      </div>
+
+      <h1 class="hero-headline fade-up delay-1">
+        Never run out of<br><span>stock again.</span>
+      </h1>
+
+      <p class="hero-sub fade-up delay-2">
+        StockSense Pro gives restaurants, retail chains and distribution centres real-time inventory intelligence — so you can focus on running your business, not counting stock.
+      </p>
+
+      <div class="hero-buttons fade-up delay-3">
+        <a href="mailto:demo@stocksensepro.com" class="btn btn-primary btn-lg">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 1v14M1 8h14" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          Start Free Trial
+        </a>
+        <a href="mailto:demo@stocksensepro.com" class="btn btn-outline btn-lg">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="white" stroke-width="1.5"/><path d="M6.5 5.5l4 2.5-4 2.5V5.5z" fill="white"/></svg>
+          Watch Demo
+        </a>
+      </div>
+
+      <!-- Dashboard Mockup -->
+      <div class="dashboard-mockup fade-up delay-4">
+        <div class="browser-chrome">
+          <div class="browser-dots">
+            <div class="browser-dot"></div>
+            <div class="browser-dot"></div>
+            <div class="browser-dot"></div>
+          </div>
+          <div class="browser-bar">
+            <div class="browser-bar-dot"></div>
+            app.stocksensepro.com/dashboard
+          </div>
+        </div>
+        <div class="dashboard-body">
+          <div class="dash-layout">
+            <div class="dash-sidebar">
+              <div class="dash-sidebar-logo">
+                <div class="dash-sidebar-logo-mark">SS</div>
+                <span>StockSense Pro</span>
+              </div>
+              <div class="dash-nav-item active">
+                <div class="dash-nav-icon" style="width:12px;height:12px;"></div>
+                Dashboard
+              </div>
+              <div class="dash-nav-item">
+                <div class="dash-nav-icon"></div>
+                Inventory
+              </div>
+              <div class="dash-nav-item">
+                <div class="dash-nav-icon"></div>
+                Alerts
+              </div>
+              <div class="dash-nav-item">
+                <div class="dash-nav-icon"></div>
+                Locations
+              </div>
+              <div class="dash-nav-item">
+                <div class="dash-nav-icon"></div>
+                Suppliers
+              </div>
+              <div class="dash-nav-item">
+                <div class="dash-nav-icon"></div>
+                Reports
+              </div>
+            </div>
+            <div class="dash-main">
+              <div class="dash-topbar">
+                <div class="dash-title">Overview — All Locations</div>
+                <div class="dash-date">10 Apr 2026, 09:41</div>
+              </div>
+              <div class="dash-kpis">
+                <div class="kpi-card">
+                  <div class="kpi-label">Total SKUs</div>
+                  <div class="kpi-value">1,847</div>
+                  <div class="kpi-change up">↑ 4.2% this week</div>
+                </div>
+                <div class="kpi-card">
+                  <div class="kpi-label">Low Stock Alerts</div>
+                  <div class="kpi-value">12</div>
+                  <div class="kpi-change down">↓ needs attention</div>
+                </div>
+                <div class="kpi-card">
+                  <div class="kpi-label">Locations</div>
+                  <div class="kpi-value">5</div>
+                  <div class="kpi-change up">↑ all healthy</div>
+                </div>
+                <div class="kpi-card">
+                  <div class="kpi-label">Waste Saved</div>
+                  <div class="kpi-value">£4.2k</div>
+                  <div class="kpi-change up">↑ this month</div>
+                </div>
+              </div>
+              <div class="dash-bottom">
+                <div class="dash-panel">
+                  <div class="dash-panel-title">Low Stock Alerts</div>
+                  <div class="alert-item">
+                    <div class="alert-dot red"></div>
+                    <div class="alert-name">Chicken Breast (kg)</div>
+                    <div class="alert-qty">2 left</div>
+                  </div>
+                  <div class="alert-item">
+                    <div class="alert-dot red"></div>
+                    <div class="alert-name">Olive Oil 5L</div>
+                    <div class="alert-qty">1 left</div>
+                  </div>
+                  <div class="alert-item">
+                    <div class="alert-dot amber"></div>
+                    <div class="alert-name">Sourdough Loaves</div>
+                    <div class="alert-qty">6 left</div>
+                  </div>
+                  <div class="alert-item">
+                    <div class="alert-dot amber"></div>
+                    <div class="alert-name">Espresso Beans 1kg</div>
+                    <div class="alert-qty">3 left</div>
+                  </div>
+                  <div class="alert-item">
+                    <div class="alert-dot green"></div>
+                    <div class="alert-name">Pasta (kg)</div>
+                    <div class="alert-qty">42 left</div>
+                  </div>
+                </div>
+                <div class="dash-panel">
+                  <div class="dash-panel-title">Stock Levels by Location</div>
+                  <div class="mini-bar-row">
+                    <div class="mini-bar-label">Bella Vista</div>
+                    <div class="mini-bar-track"><div class="mini-bar-fill" style="width:82%"></div></div>
+                    <div class="mini-bar-pct">82%</div>
+                  </div>
+                  <div class="mini-bar-row">
+                    <div class="mini-bar-label">FreshMart N1</div>
+                    <div class="mini-bar-track"><div class="mini-bar-fill" style="width:67%"></div></div>
+                    <div class="mini-bar-pct">67%</div>
+                  </div>
+                  <div class="mini-bar-row">
+                    <div class="mini-bar-label">Metro Foods</div>
+                    <div class="mini-bar-track"><div class="mini-bar-fill" style="width:91%"></div></div>
+                    <div class="mini-bar-pct">91%</div>
+                  </div>
+                  <div class="mini-bar-row">
+                    <div class="mini-bar-label">QuickStock HQ</div>
+                    <div class="mini-bar-track"><div class="mini-bar-fill" style="width:54%"></div></div>
+                    <div class="mini-bar-pct">54%</div>
+                  </div>
+                  <div class="mini-bar-row">
+                    <div class="mini-bar-label">Corner Store</div>
+                    <div class="mini-bar-track"><div class="mini-bar-fill" style="width:76%"></div></div>
+                    <div class="mini-bar-pct">76%</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mockup-shadow"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     3. SOCIAL PROOF BAR
+═══════════════════════════════════════════════════════════════════ -->
+<section id="social-proof">
+  <div class="container">
+    <div class="proof-inner fade-up">
+      <p class="proof-label">Trusted by forward-thinking businesses</p>
+      <div class="proof-logos">
+        <span class="proof-logo">Bella Vista</span>
+        <span class="proof-logo">FreshMart</span>
+        <span class="proof-logo">Metro Foods</span>
+        <span class="proof-logo">QuickStock Ltd</span>
+        <span class="proof-logo">The Corner Store</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     4. PROBLEM SECTION
+═══════════════════════════════════════════════════════════════════ -->
+<section id="problem">
+  <div class="container">
+    <div class="section-header center fade-up">
+      <span class="section-label">The Problem</span>
+      <h2 class="section-headline">Stock problems are<br>costing you money</h2>
+    </div>
+    <div class="problem-grid">
+      <div class="problem-card fade-up delay-1">
+        <div class="problem-icon">🚨</div>
+        <h3>Stockouts cost UK restaurants £3,000/month on average</h3>
+      </div>
+      <div class="problem-card fade-up delay-2">
+        <div class="problem-icon">📦</div>
+        <h3>Manual stock counts take 8+ hours per week</h3>
+      </div>
+      <div class="problem-card fade-up delay-3">
+        <div class="problem-icon">🗑️</div>
+        <h3>Food waste accounts for 15% of restaurant costs</h3>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     5. FEATURES SECTION
+═══════════════════════════════════════════════════════════════════ -->
+<section id="features">
+  <div class="container">
+    <div class="section-header center fade-up">
+      <span class="section-label">Features</span>
+      <h2 class="section-headline">Everything you need to<br>optimise your inventory</h2>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card fade-up delay-1">
+        <div class="feature-icon">📊</div>
+        <h3>Real-time Dashboard</h3>
+        <p>See all stock levels across every location instantly. No spreadsheets, no guesswork.</p>
+      </div>
+      <div class="feature-card fade-up delay-2">
+        <div class="feature-icon">🔔</div>
+        <h3>Smart Alerts</h3>
+        <p>Get notified before you run out, not after. Set custom thresholds per product and location.</p>
+      </div>
+      <div class="feature-card fade-up delay-3">
+        <div class="feature-icon">🍽️</div>
+        <h3>Restaurant Module</h3>
+        <p>Ingredients auto-deduct when dishes are served. Your stock stays accurate without lifting a finger.</p>
+      </div>
+      <div class="feature-card fade-up delay-4">
+        <div class="feature-icon">🏭</div>
+        <h3>Distribution Centre</h3>
+        <p>Track bulk movements and supplier performance across your entire distribution network.</p>
+      </div>
+      <div class="feature-card fade-up delay-5">
+        <div class="feature-icon">📈</div>
+        <h3>AI Forecasting</h3>
+        <p>Predict demand before it happens. Our AI learns your patterns and recommends reorder points.</p>
+      </div>
+      <div class="feature-card fade-up delay-6">
+        <div class="feature-icon">🔗</div>
+        <h3>Integrations</h3>
+        <p>Connects to your POS, accounting software and more. Square, Toast, Lightspeed and beyond.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     6. HOW IT WORKS
+═══════════════════════════════════════════════════════════════════ -->
+<section id="how-it-works">
+  <div class="container">
+    <div class="section-header center fade-up">
+      <span class="section-label">How it works</span>
+      <h2 class="section-headline">Up and running in 3 steps</h2>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card fade-up delay-1">
+        <div class="step-number">1</div>
+        <h3>Connect your data</h3>
+        <p>Link your POS, suppliers and locations in minutes. We handle the technical setup — you just click connect.</p>
+      </div>
+      <div class="step-card fade-up delay-2">
+        <div class="step-number">2</div>
+        <h3>See everything</h3>
+        <p>Your entire inventory in one real-time dashboard. Every location, every SKU, every movement — live.</p>
+      </div>
+      <div class="step-card fade-up delay-3">
+        <div class="step-number">3</div>
+        <h3>Take action</h3>
+        <p>Automated alerts and AI recommendations handle the rest. You focus on the business, we handle the stock.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     7. TESTIMONIALS
+═══════════════════════════════════════════════════════════════════ -->
+<section id="testimonials">
+  <div class="container">
+    <div class="section-header center fade-up" style="margin-bottom:56px;">
+      <span class="section-label">Customer Stories</span>
+      <h2 class="section-headline section-headline-light">What our customers say</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card fade-up delay-1">
+        <div class="stars">★★★★★</div>
+        <blockquote>"We reduced food waste by 23% in the first month. The dashboard made it immediately obvious where the problem areas were."</blockquote>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background: linear-gradient(135deg, #3B82F6, #6366F1);">JT</div>
+          <div class="author-info">
+            <div class="author-name">James T.</div>
+            <div class="author-role">Head Chef, Bella Vista Restaurant</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card fade-up delay-2">
+        <div class="stars">★★★★★</div>
+        <blockquote>"Stock alerts have saved us from running out during peak hours countless times. I don't know how we managed without it."</blockquote>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background: linear-gradient(135deg, #10B981, #3B82F6);">SM</div>
+          <div class="author-info">
+            <div class="author-name">Sarah M.</div>
+            <div class="author-role">Operations Manager, FreshMart</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card fade-up delay-3">
+        <div class="stars">★★★★★</div>
+        <blockquote>"Setup took 20 minutes. ROI was immediate. We've now rolled it out across all five of our sites."</blockquote>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background: linear-gradient(135deg, #F59E0B, #EF4444);">DK</div>
+          <div class="author-info">
+            <div class="author-name">David K.</div>
+            <div class="author-role">Owner, Metro Foods Group</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     8. PRICING
+═══════════════════════════════════════════════════════════════════ -->
+<section id="pricing">
+  <div class="container">
+    <div class="section-header center fade-up">
+      <span class="section-label">Pricing</span>
+      <h2 class="section-headline">Simple, transparent pricing</h2>
+      <p class="section-sub" style="margin:16px auto 0;">No hidden fees. No long-term contracts. Cancel anytime.</p>
+    </div>
+    <div class="pricing-grid" style="margin-top:64px;">
+
+      <!-- Starter -->
+      <div class="pricing-card fade-up delay-1">
+        <div class="pricing-tier">Starter</div>
+        <div class="pricing-price">
+          <span class="price-currency">£</span>
+          <span class="price-amount">99</span>
+          <span class="price-period">/month</span>
+        </div>
+        <p class="pricing-desc">Perfect for single-site businesses just getting started.</p>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li class="pricing-feature"><div class="check-icon"></div>1 location</li>
+          <li class="pricing-feature"><div class="check-icon"></div>Up to 200 products</li>
+          <li class="pricing-feature"><div class="check-icon"></div>Real-time dashboard</li>
+          <li class="pricing-feature"><div class="check-icon"></div>Low stock alerts</li>
+          <li class="pricing-feature"><div class="check-icon"></div>Email support</li>
+        </ul>
+        <a href="mailto:demo@stocksensepro.com" class="btn btn-outline-dark pricing-btn">Start Free Trial</a>
+      </div>
+
+      <!-- Growth (Popular) -->
+      <div class="pricing-card popular fade-up delay-2">
+        <div class="popular-badge">Most Popular</div>
+        <div class="pricing-tier blue">Growth</div>
+        <div class="pricing-price">
+          <span class="price-currency" style="color:var(--blue)">£</span>
+          <span class="price-amount" style="color:var(--blue)">199</span>
+          <span class="price-period">/month</span>
+        </div>
+        <p class="pricing-desc">For growing multi-site businesses ready to scale.</p>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li class="pricing-feature"><div class="check-icon"></div>Up to 5 locations</li>
+          <li class="pricing-feature"><div class="check-icon"></div>Unlimited products</li>
+          <li class="pricing-feature"><div class="check-icon"></div>All modules included</li>
+          <li class="pricing-feature"><div class="check-icon"></div>AI demand forecasting</li>
+          <li class="pricing-feature"><div class="check-icon"></div>Priority support</li>
+        </ul>
+        <a href="mailto:demo@stocksensepro.com" class="btn btn-primary pricing-btn">Start Free Trial</a>
+      </div>
+
+      <!-- Enterprise -->
+      <div class="pricing-card fade-up delay-3">
+        <div class="pricing-tier">Enterprise</div>
+        <div class="pricing-price">
+          <span class="price-currency">£</span>
+          <span class="price-amount">499</span>
+          <span class="price-period">/month</span>
+        </div>
+        <p class="pricing-desc">For large operations that need unlimited scale and control.</p>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li class="pricing-feature"><div class="check-icon"></div>Unlimited locations</li>
+          <li class="pricing-feature"><div class="check-icon"></div>White-label option</li>
+          <li class="pricing-feature"><div class="check-icon"></div>API access</li>
+          <li class="pricing-feature"><div class="check-icon"></div>Custom integrations</li>
+          <li class="pricing-feature"><div class="check-icon"></div>Dedicated account manager</li>
+        </ul>
+        <a href="mailto:demo@stocksensepro.com" class="btn btn-outline-dark pricing-btn">Book a Demo</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     9. FAQ
+═══════════════════════════════════════════════════════════════════ -->
+<section id="faq">
+  <div class="container">
+    <div class="section-header center fade-up" style="margin-bottom:56px;">
+      <span class="section-label">FAQ</span>
+      <h2 class="section-headline">Frequently asked questions</h2>
+    </div>
+    <div class="faq-list fade-up delay-1">
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          How long does setup take?
+          <div class="faq-icon">
+            <svg viewBox="0 0 14 14"><path d="M2 5l5 5 5-5"/></svg>
+          </div>
+        </button>
+        <div class="faq-answer">
+          <p>Most businesses are fully set up within 20 minutes. We handle all the onboarding and provide a dedicated setup call if needed. Our team is on hand throughout.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Do I need technical knowledge?
+          <div class="faq-icon">
+            <svg viewBox="0 0 14 14"><path d="M2 5l5 5 5-5"/></svg>
+          </div>
+        </button>
+        <div class="faq-answer">
+          <p>No. StockSense Pro is designed for business owners and managers, not IT teams. If you can use a smartphone, you can use StockSense Pro.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Can I cancel anytime?
+          <div class="faq-icon">
+            <svg viewBox="0 0 14 14"><path d="M2 5l5 5 5-5"/></svg>
+          </div>
+        </button>
+        <div class="faq-answer">
+          <p>Yes. No contracts, no cancellation fees. Cancel anytime from your account settings with a single click. We don't believe in locking you in.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Does it work with my existing POS system?
+          <div class="faq-icon">
+            <svg viewBox="0 0 14 14"><path d="M2 5l5 5 5-5"/></svg>
+          </div>
+        </button>
+        <div class="faq-answer">
+          <p>We integrate with Square, Toast, Lightspeed, Clover and most major POS systems. If you're on something else, our API allows custom integration on the Enterprise plan.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Is my data secure?
+          <div class="faq-icon">
+            <svg viewBox="0 0 14 14"><path d="M2 5l5 5 5-5"/></svg>
+          </div>
+        </button>
+        <div class="faq-answer">
+          <p>Yes. We use bank-level encryption (AES-256) in transit and at rest. We are SOC 2 Type II compliant. Your data is never sold or shared with third parties.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     10. FINAL CTA
+═══════════════════════════════════════════════════════════════════ -->
+<section id="final-cta">
+  <div class="container">
+    <div class="cta-content fade-up">
+      <h2>Ready to take control of<br>your inventory?</h2>
+      <p>Join businesses saving thousands every month with StockSense Pro.</p>
+      <a href="mailto:demo@stocksensepro.com" class="btn btn-primary btn-lg">
+        Start Your Free Trial
+      </a>
+      <p class="cta-note">30-day free trial. No credit card required.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     11. FOOTER
+═══════════════════════════════════════════════════════════════════ -->
+<footer id="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <div class="logo-mark">SS</div>
+        StockSense Pro
+      </div>
+      <nav class="footer-links">
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#pricing">Login</a>
+        <a href="mailto:demo@stocksensepro.com">Contact</a>
+      </nav>
+      <p class="footer-copy">© 2026 StockSense Pro. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════════════════════════ -->
+<script>
+  /* ── Navbar scroll behaviour ── */
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 40);
+  }, { passive: true });
+
+  /* ── Mobile menu ── */
+  function toggleMobileMenu() {
+    document.getElementById('mobile-menu').classList.toggle('open');
+  }
+  function closeMobileMenu() {
+    document.getElementById('mobile-menu').classList.remove('open');
+  }
+
+  /* ── FAQ accordion ── */
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    // Close all
+    document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  /* ── Intersection Observer — fade-up animations ── */
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.12,
+    rootMargin: '0px 0px -40px 0px'
+  });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  /* ── Smooth scroll for all anchor links ── */
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        const offset = 80;
+        const top = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
