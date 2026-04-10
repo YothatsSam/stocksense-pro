@@ -1,34 +1,75 @@
 import { createContext, useContext, useState } from 'react'
 
+export type BusinessType = 'retail' | 'restaurant' | 'distribution'
+
 interface AuthContextValue {
   token: string | null
   userEmail: string | null
-  signIn: (token: string, email: string) => void
+  userName: string | null
+  organisationId: number | null
+  businessType: BusinessType | null
+  organisationName: string | null
+  signIn: (data: SignInData) => void
   signOut: () => void
+}
+
+export interface SignInData {
+  token: string
+  email: string
+  name?: string | null
+  organisationId: number
+  businessType: BusinessType
+  organisationName: string
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null)
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [token, setToken] = useState<string | null>(() => localStorage.getItem('token'))
-  const [userEmail, setUserEmail] = useState<string | null>(() => localStorage.getItem('userEmail'))
+function readJson<T>(key: string): T | null {
+  try {
+    const v = localStorage.getItem(key)
+    return v ? JSON.parse(v) : null
+  } catch {
+    return null
+  }
+}
 
-  function signIn(newToken: string, email: string) {
-    localStorage.setItem('token', newToken)
-    localStorage.setItem('userEmail', email)
-    setToken(newToken)
-    setUserEmail(email)
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [token, setToken]               = useState<string | null>(() => localStorage.getItem('token'))
+  const [userEmail, setUserEmail]       = useState<string | null>(() => localStorage.getItem('userEmail'))
+  const [userName, setUserName]         = useState<string | null>(() => localStorage.getItem('userName'))
+  const [organisationId, setOrgId]      = useState<number | null>(() => readJson<number>('organisationId'))
+  const [businessType, setBizType]      = useState<BusinessType | null>(() => readJson<BusinessType>('businessType'))
+  const [organisationName, setOrgName]  = useState<string | null>(() => localStorage.getItem('organisationName'))
+
+  function signIn(data: SignInData) {
+    localStorage.setItem('token',            data.token)
+    localStorage.setItem('userEmail',        data.email)
+    localStorage.setItem('userName',         data.name ?? '')
+    localStorage.setItem('organisationId',   JSON.stringify(data.organisationId))
+    localStorage.setItem('businessType',     JSON.stringify(data.businessType))
+    localStorage.setItem('organisationName', data.organisationName)
+
+    setToken(data.token)
+    setUserEmail(data.email)
+    setUserName(data.name ?? null)
+    setOrgId(data.organisationId)
+    setBizType(data.businessType)
+    setOrgName(data.organisationName)
   }
 
   function signOut() {
-    localStorage.removeItem('token')
-    localStorage.removeItem('userEmail')
+    ['token', 'userEmail', 'userName', 'organisationId', 'businessType', 'organisationName']
+      .forEach(k => localStorage.removeItem(k))
     setToken(null)
     setUserEmail(null)
+    setUserName(null)
+    setOrgId(null)
+    setBizType(null)
+    setOrgName(null)
   }
 
   return (
-    <AuthContext.Provider value={{ token, userEmail, signIn, signOut }}>
+    <AuthContext.Provider value={{ token, userEmail, userName, organisationId, businessType, organisationName, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   )

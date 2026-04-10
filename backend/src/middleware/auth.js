@@ -9,7 +9,15 @@ function requireAuth(req, res, next) {
   }
 
   try {
-    req.user = jwt.verify(token, process.env.JWT_SECRET)
+    const payload = jwt.verify(token, process.env.JWT_SECRET)
+
+    // Reject tokens issued before multi-tenancy (no organisationId)
+    if (!payload.organisationId) {
+      return res.status(401).json({ error: 'Session expired. Please log in again.' })
+    }
+
+    // req.user shape: { sub, email, role, organisationId, businessType }
+    req.user = payload
     next()
   } catch {
     return res.status(401).json({ error: 'Invalid or expired token.' })

@@ -1,4 +1,7 @@
-import type { AdjustPayload, Alert, AuthResponse, Product, Recipe, StockLevel } from '../types'
+import type {
+  AdjustPayload, Alert, AuthResponse, Location,
+  OnboardingProduct, Product, Recipe, RegisterPayload, StockLevel,
+} from '../types'
 
 const BASE = `${import.meta.env.VITE_API_URL ?? 'http://localhost:3001'}/api`
 
@@ -30,14 +33,20 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
   return res.json() as Promise<T>
 }
 
-// Auth
+// ── Auth ─────────────────────────────────────────────────────────────
 export const login = (email: string, password: string) =>
   request<AuthResponse>('/auth/login', {
     method: 'POST',
     body: JSON.stringify({ email, password }),
   })
 
-// Stock
+export const register = (payload: RegisterPayload) =>
+  request<AuthResponse>('/auth/register', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  })
+
+// ── Stock ─────────────────────────────────────────────────────────────
 export const getStock = () => request<StockLevel[]>('/stock')
 
 export const adjustStock = (payload: AdjustPayload) =>
@@ -48,7 +57,7 @@ export const adjustStock = (payload: AdjustPayload) =>
 
 export const getAlerts = () => request<Alert[]>('/alerts')
 
-// Restaurant
+// ── Restaurant ────────────────────────────────────────────────────────
 export const getRecipes = () => request<Recipe[]>('/restaurant/recipes')
 
 export const createRecipe = (data: {
@@ -78,4 +87,20 @@ export const getLocations = () =>
         return true
       })
       .map((r) => ({ id: r.location_id, name: r.location_name, business_type: r.business_type }))
+  })
+
+// ── Onboarding ────────────────────────────────────────────────────────
+export const addLocation = (data: { name: string; address?: string; business_type?: string }) =>
+  request<Location>('/onboarding/locations', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  })
+
+export const getOnboardingLocations = () =>
+  request<Location[]>('/onboarding/locations')
+
+export const addProduct = (data: OnboardingProduct) =>
+  request<Product>('/onboarding/products', {
+    method: 'POST',
+    body: JSON.stringify(data),
   })

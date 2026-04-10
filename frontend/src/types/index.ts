@@ -26,7 +26,12 @@ export interface AdjustPayload {
 export interface AuthResponse {
   token: string
   email: string
+  name: string | null
   role: string
+  organisationId: number
+  businessType: 'retail' | 'restaurant' | 'distribution'
+  organisationName: string
+  subscriptionPlan: string
 }
 
 export interface Product {
@@ -63,4 +68,27 @@ export interface Location {
   id: number
   name: string
   business_type: string
+  address?: string
+}
+
+export interface RegisterPayload {
+  business_name: string
+  business_type: 'retail' | 'restaurant' | 'distribution'
+  name: string
+  email: string
+  password: string
+}
+
+export interface OnboardingLocation {
+  name: string
+  address?: string
+  business_type?: string
+}
+
+export interface OnboardingProduct {
+  name: string
+  sku: string
+  unit: string
+  reorder_point: number
+  location_id?: number
 }

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { login } from '../api/client'
 import { useAuth } from '../context/AuthContext'
 
@@ -7,9 +7,9 @@ export default function Login() {
   const { signIn } = useAuth()
   const navigate = useNavigate()
 
-  const [email, setEmail] = useState('')
+  const [email, setEmail]     = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError]     = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
   async function handleSubmit(e: React.FormEvent) {
@@ -18,7 +18,14 @@ export default function Login() {
     setLoading(true)
     try {
       const data = await login(email, password)
-      signIn(data.token, data.email)
+      signIn({
+        token:            data.token,
+        email:            data.email,
+        name:             data.name,
+        organisationId:   data.organisationId,
+        businessType:     data.businessType,
+        organisationName: data.organisationName,
+      })
       navigate('/')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Invalid credentials.')
@@ -100,8 +107,12 @@ export default function Login() {
           </form>
         </div>
 
-        <p className="mt-5 text-center text-xs text-zinc-400">
-          StockSense Pro · Enterprise Inventory Management
+        {/* Sign up link */}
+        <p className="mt-5 text-center text-sm text-zinc-500">
+          Don't have an account?{' '}
+          <Link to="/signup" className="font-medium text-brand-600 hover:text-brand-700 transition-colors">
+            Sign up free
+          </Link>
         </p>
       </div>
     </div>

@@ -5,6 +5,7 @@ const stockRoutes = require('./routes/stock')
 const alertsRoutes = require('./routes/alerts')
 const authRoutes = require('./routes/auth')
 const restaurantRoutes = require('./routes/restaurant')
+const onboardingRoutes = require('./routes/onboarding')
 const requireAuth = require('./middleware/auth')
 const errorHandler = require('./middleware/errorHandler')
 
@@ -18,9 +19,10 @@ app.use(express.json())
 app.use('/api/auth', authRoutes)
 
 // Protected routes
-app.use('/api/stock',      requireAuth, stockRoutes)
-app.use('/api/alerts',     requireAuth, alertsRoutes)
-app.use('/api/restaurant', requireAuth, restaurantRoutes)
+app.use('/api/stock',       requireAuth, stockRoutes)
+app.use('/api/alerts',      requireAuth, alertsRoutes)
+app.use('/api/restaurant',  requireAuth, restaurantRoutes)
+app.use('/api/onboarding',  requireAuth, onboardingRoutes)
 
 // Health check
 app.get('/api/health', (_req, res) => res.json({ status: 'ok' }))

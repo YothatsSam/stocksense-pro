@@ -1,8 +1,8 @@
 const pool = require('../config/database')
 
 // GET /api/alerts
-// Returns all stock_level rows where quantity is below reorder_point.
 async function getAlerts(req, res, next) {
+  const orgId = req.user.organisationId
   try {
     const { rows } = await pool.query(`
       SELECT
@@ -20,9 +20,10 @@ async function getAlerts(req, res, next) {
       FROM stock_levels sl
       JOIN products  p ON p.id = sl.product_id
       JOIN locations l ON l.id = sl.location_id
-      WHERE sl.quantity < sl.reorder_point
+      WHERE sl.organisation_id = $1
+        AND sl.quantity < sl.reorder_point
       ORDER BY deficit DESC, l.name, p.name
-    `)
+    `, [orgId])
     res.json(rows)
   } catch (err) {
     next(err)

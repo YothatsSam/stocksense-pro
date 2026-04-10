@@ -1,8 +1,8 @@
 const pool = require('../config/database')
 
 // GET /api/stock
-// Returns all stock levels joined with product and location data.
 async function getStock(req, res, next) {
+  const orgId = req.user.organisationId
   try {
     const { rows } = await pool.query(`
       SELECT
@@ -20,8 +20,9 @@ async function getStock(req, res, next) {
       FROM stock_levels sl
       JOIN products  p ON p.id = sl.product_id
       JOIN locations l ON l.id = sl.location_id
+      WHERE sl.organisation_id = $1
       ORDER BY l.name, p.name
-    `)
+    `, [orgId])
     res.json(rows)
   } catch (err) {
     next(err)
@@ -30,9 +31,9 @@ async function getStock(req, res, next) {
 
 // POST /api/stock/adjust
 // Body: { product_id, location_id, quantity_change, reason }
-// Adjusts quantity and writes a stock_movement record atomically.
 async function adjustStock(req, res, next) {
   const { product_id, location_id, quantity_change, reason } = req.body
+  const orgId = req.user.organisationId
 
   if (
     product_id == null ||
@@ -53,9 +54,9 @@ async function adjustStock(req, res, next) {
       `UPDATE stock_levels
           SET quantity   = quantity + $1,
               updated_at = NOW()
-        WHERE product_id = $2 AND location_id = $3
+        WHERE product_id = $2 AND location_id = $3 AND organisation_id = $4
         RETURNING *`,
-      [quantity_change, product_id, location_id]
+      [quantity_change, product_id, location_id, orgId]
     )
 
     if (rows.length === 0) {
@@ -66,9 +67,9 @@ async function adjustStock(req, res, next) {
     }
 
     await client.query(
-      `INSERT INTO stock_movements (product_id, location_id, quantity_change, reason)
-       VALUES ($1, $2, $3, $4)`,
-      [product_id, location_id, quantity_change, reason || 'manual adjustment']
+      `INSERT INTO stock_movements (organisation_id, product_id, location_id, quantity_change, reason)
+       VALUES ($1, $2, $3, $4, $5)`,
+      [orgId, product_id, location_id, quantity_change, reason || 'manual adjustment']
     )
 
     await client.query('COMMIT')
