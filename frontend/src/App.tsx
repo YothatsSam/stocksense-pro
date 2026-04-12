@@ -6,6 +6,8 @@ import Signup from './pages/Signup'
 import Onboarding from './pages/Onboarding'
 import Dashboard from './pages/Dashboard'
 import Restaurant from './pages/Restaurant'
+import Distribution from './pages/Distribution'
+import Settings from './pages/Settings'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { token } = useAuth()
@@ -46,6 +48,26 @@ function AppRoutes() {
           <ProtectedRoute>
             <Layout>
               <Restaurant />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/distribution"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <Distribution />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <Settings />
             </Layout>
           </ProtectedRoute>
         }

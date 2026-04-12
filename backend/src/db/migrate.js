@@ -128,10 +128,44 @@ const statements = [
   `ALTER TABLE recipes
      ADD COLUMN IF NOT EXISTS organisation_id INT REFERENCES organisations(id) ON DELETE CASCADE`,
 
+  // ── Distribution: purchase_order_items ──────────────────────────────
+
+  `CREATE TABLE IF NOT EXISTS purchase_order_items (
+    id                SERIAL PRIMARY KEY,
+    purchase_order_id INT           NOT NULL REFERENCES purchase_orders(id) ON DELETE CASCADE,
+    product_id        INT           NOT NULL REFERENCES products(id)        ON DELETE RESTRICT,
+    quantity_ordered  NUMERIC(12,3) NOT NULL DEFAULT 0,
+    quantity_received NUMERIC(12,3) NOT NULL DEFAULT 0,
+    unit_price        NUMERIC(10,2) NOT NULL DEFAULT 0
+  )`,
+
+  // ── Distribution: shipments ──────────────────────────────────────────
+
+  `CREATE TABLE IF NOT EXISTS shipments (
+    id              SERIAL PRIMARY KEY,
+    organisation_id INT         REFERENCES organisations(id) ON DELETE CASCADE,
+    reference       VARCHAR(255) NOT NULL,
+    type            VARCHAR(20)  NOT NULL DEFAULT 'inbound' CHECK (type IN ('inbound', 'outbound')),
+    status          VARCHAR(50)  NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'in_transit', 'delivered')),
+    location_id     INT         REFERENCES locations(id) ON DELETE SET NULL,
+    notes           TEXT,
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )`,
+
   // ── Other additive columns (safe to re-run) ──────────────────────────
 
   `ALTER TABLE products ADD COLUMN IF NOT EXISTS unit_cost NUMERIC(10,2) NOT NULL DEFAULT 0`,
   `ALTER TABLE users    ADD COLUMN IF NOT EXISTS name VARCHAR(255)`,
+
+  // ── Additive columns on purchase_orders ─────────────────────────────
+
+  `ALTER TABLE purchase_orders ADD COLUMN IF NOT EXISTS total_items      INT          NOT NULL DEFAULT 0`,
+  `ALTER TABLE purchase_orders ADD COLUMN IF NOT EXISTS expected_delivery DATE`,
+
+  // ── Additive columns on suppliers ───────────────────────────────────
+
+  `ALTER TABLE suppliers ADD COLUMN IF NOT EXISTS contact_person VARCHAR(255)`,
+  `ALTER TABLE suppliers ADD COLUMN IF NOT EXISTS notes TEXT`,
 ]
 
 async function migrate() {

@@ -92,3 +92,74 @@ export interface OnboardingProduct {
   reorder_point: number
   location_id?: number
 }
+
+// ── Distribution ─────────────────────────────────────────────────────────────
+
+export interface PurchaseOrderItem {
+  id: number
+  product_id: number
+  product_name: string
+  sku: string
+  unit: string
+  quantity_ordered: string
+  quantity_received: string
+  unit_price: string
+}
+
+export interface PurchaseOrder {
+  id: number
+  supplier_id: number
+  supplier_name: string
+  location_id: number | null
+  location_name: string | null
+  status: 'draft' | 'sent' | 'received' | 'cancelled'
+  total_items: number
+  expected_delivery: string | null
+  notes: string | null
+  created_at: string
+  items: PurchaseOrderItem[]
+}
+
+export interface Shipment {
+  id: number
+  organisation_id: number
+  reference: string
+  type: 'inbound' | 'outbound'
+  status: 'pending' | 'in_transit' | 'delivered'
+  location_id: number | null
+  location_name: string | null
+  notes: string | null
+  created_at: string
+}
+
+export interface Supplier {
+  id: number
+  name: string
+  contact_person: string | null
+  contact_email: string | null
+  contact_phone: string | null
+  notes: string | null
+  products_supplied: string
+  created_at: string
+}
+
+// ── Settings ─────────────────────────────────────────────────────────────────
+
+export interface SettingsLocation {
+  id: number
+  name: string
+  business_type: string
+  address: string | null
+  product_count: string
+  created_at: string
+}
+
+export interface SettingsProduct {
+  id: number
+  sku: string
+  name: string
+  unit: string
+  unit_cost: string
+  reorder_point: string
+  created_at: string
+}

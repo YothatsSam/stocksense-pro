@@ -4,8 +4,8 @@ import { useAuth } from '../context/AuthContext'
 const NAV_ITEMS = [
   { to: '/',             label: 'Dashboard',    emoji: '📦', exact: true,  disabled: false },
   { to: '/restaurant',   label: 'Restaurant',   emoji: '🍽️', exact: false, disabled: false },
-  { to: '/distribution', label: 'Distribution', emoji: '🏭', exact: false, disabled: true  },
-  { to: '/settings',     label: 'Settings',     emoji: '⚙️', exact: false, disabled: true  },
+  { to: '/distribution', label: 'Distribution', emoji: '🏭', exact: false, disabled: false },
+  { to: '/settings',     label: 'Settings',     emoji: '⚙️', exact: false, disabled: false },
 ]
 
 interface Props {
