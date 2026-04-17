@@ -166,6 +166,30 @@ const statements = [
 
   `ALTER TABLE suppliers ADD COLUMN IF NOT EXISTS contact_person VARCHAR(255)`,
   `ALTER TABLE suppliers ADD COLUMN IF NOT EXISTS notes TEXT`,
+
+  // ── User preferences (notification toggles) ─────────────────────────
+
+  `CREATE TABLE IF NOT EXISTS user_preferences (
+    id                SERIAL PRIMARY KEY,
+    user_id           INT  NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,
+    low_stock_alerts  BOOLEAN NOT NULL DEFAULT TRUE,
+    weekly_summary    BOOLEAN NOT NULL DEFAULT TRUE,
+    new_user_joined   BOOLEAN NOT NULL DEFAULT TRUE,
+    updated_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )`,
+
+  `CREATE TABLE IF NOT EXISTS notification_preferences (
+    id                SERIAL PRIMARY KEY,
+    user_id           INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    organisation_id   INT NOT NULL REFERENCES organisations(id) ON DELETE CASCADE,
+    low_stock_alerts  BOOLEAN NOT NULL DEFAULT true,
+    weekly_summary    BOOLEAN NOT NULL DEFAULT true,
+    new_user_joined   BOOLEAN NOT NULL DEFAULT true,
+    updated_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE (user_id)
+  )`,
+
+  `ALTER TABLE suppliers ADD COLUMN IF NOT EXISTS products_supplied TEXT NOT NULL DEFAULT ''`,
 ]
 
 async function migrate() {
