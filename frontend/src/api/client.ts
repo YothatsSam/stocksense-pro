@@ -3,6 +3,7 @@ import type {
   OnboardingProduct, Product, Recipe, RegisterPayload, StockLevel,
   PurchaseOrder, Shipment, Supplier,
   SettingsLocation, SettingsProduct,
+  UserProfile, OrgDetails, TeamMember, NotificationPrefs,
 } from '../types'
 
 const BASE = `${import.meta.env.VITE_API_URL ?? 'http://localhost:3001'}/api`
@@ -196,3 +197,40 @@ export const createSettingsProduct = (data: {
 
 export const deleteSettingsProduct = (id: number) =>
   request<{ success: boolean }>(`/settings/products/${id}`, { method: 'DELETE' })
+
+// ── Settings — profile / org / team / notifications ───────────────────────────
+
+export const getProfile = () => request<UserProfile>('/settings/profile')
+
+export const updateProfile = (data: { name: string; email: string }) =>
+  request<{ id: number; email: string; name: string | null; role: string }>('/settings/profile', {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  })
+
+export const updatePassword = (data: {
+  current_password: string
+  new_password: string
+}) =>
+  request<{ success: boolean }>('/settings/password', {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  })
+
+export const getOrganisation = () => request<OrgDetails>('/settings/organisation')
+
+export const updateOrganisation = (data: { name: string; business_type: string }) =>
+  request<OrgDetails>('/settings/organisation', {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  })
+
+export const getTeam = () => request<TeamMember[]>('/settings/team')
+
+export const getNotifications = () => request<NotificationPrefs>('/settings/notifications')
+
+export const updateNotifications = (data: NotificationPrefs) =>
+  request<NotificationPrefs>('/settings/notifications', {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  })

@@ -7,6 +7,7 @@ import Onboarding from './pages/Onboarding'
 import Dashboard from './pages/Dashboard'
 import Restaurant from './pages/Restaurant'
 import Distribution from './pages/Distribution'
+import Catalogue from './pages/Catalogue'
 import Settings from './pages/Settings'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -58,6 +59,16 @@ function AppRoutes() {
           <ProtectedRoute>
             <Layout>
               <Distribution />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/catalogue"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <Catalogue />
             </Layout>
           </ProtectedRoute>
         }

@@ -163,3 +163,38 @@ export interface SettingsProduct {
   reorder_point: string
   created_at: string
 }
+
+export interface UserProfile {
+  id: number
+  email: string
+  name: string | null
+  role: string
+  created_at: string
+  organisation_id: number
+  organisation_name: string
+  business_type: string
+  subscription_plan: string
+}
+
+export interface OrgDetails {
+  id: number
+  name: string
+  business_type: string
+  subscription_plan: string
+  email: string
+  created_at: string
+}
+
+export interface TeamMember {
+  id: number
+  name: string | null
+  email: string
+  role: string
+  created_at: string
+}
+
+export interface NotificationPrefs {
+  low_stock_alerts: boolean
+  weekly_summary: boolean
+  new_user_joined: boolean
+}

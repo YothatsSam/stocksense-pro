@@ -11,6 +11,8 @@ interface AuthContextValue {
   organisationName: string | null
   signIn: (data: SignInData) => void
   signOut: () => void
+  updateProfile: (name: string, email: string) => void
+  updateOrgName: (name: string) => void
 }
 
 export interface SignInData {
@@ -68,8 +70,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setOrgName(null)
   }
 
+  function updateProfile(name: string, email: string) {
+    localStorage.setItem('userName', name)
+    localStorage.setItem('userEmail', email)
+    setUserName(name || null)
+    setUserEmail(email)
+  }
+
+  function updateOrgName(name: string) {
+    localStorage.setItem('organisationName', name)
+    setOrgName(name)
+  }
+
   return (
-    <AuthContext.Provider value={{ token, userEmail, userName, organisationId, businessType, organisationName, signIn, signOut }}>
+    <AuthContext.Provider value={{ token, userEmail, userName, organisationId, businessType, organisationName, signIn, signOut, updateProfile, updateOrgName }}>
       {children}
     </AuthContext.Provider>
   )
