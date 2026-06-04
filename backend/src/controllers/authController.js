@@ -32,10 +32,10 @@ async function login(req, res, next) {
     )
 
     const user = rows[0]
-    if (!user) return res.status(401).json({ error: 'Invalid email or password.' })
+    if (!user) return res.status(401).json({ error: 'No account found with that email address.' })
 
     const valid = await bcrypt.compare(password, user.password_hash)
-    if (!valid) return res.status(401).json({ error: 'Invalid email or password.' })
+    if (!valid) return res.status(401).json({ error: 'Wrong password. Please try again.' })
 
     const org = { id: user.organisation_id, business_type: user.business_type }
     const token = makeToken(user, org)
@@ -69,6 +69,15 @@ async function register(req, res, next) {
 
   if (password.length < 8) {
     return res.status(400).json({ error: 'Password must be at least 8 characters.' })
+  }
+  if (!/[A-Z]/.test(password)) {
+    return res.status(400).json({ error: 'Password must contain at least one uppercase letter.' })
+  }
+  if (!/[0-9]/.test(password)) {
+    return res.status(400).json({ error: 'Password must contain at least one number.' })
+  }
+  if (!/[^A-Za-z0-9]/.test(password)) {
+    return res.status(400).json({ error: 'Password must contain at least one special character (e.g. !@#$%).' })
   }
 
   const client = await pool.connect()
