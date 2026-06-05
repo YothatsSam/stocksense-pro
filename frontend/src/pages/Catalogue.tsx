@@ -447,7 +447,7 @@ export default function Catalogue() {
         <p className="mt-0.5 text-sm text-zinc-500">Manage your locations and product catalogue</p>
       </div>
 
-      <div className="space-y-10 max-w-5xl">
+      <div className="space-y-10">
         <LocationsSection />
         <div className="h-px bg-zinc-200 dark:bg-zinc-800" />
         <ProductsSection />
