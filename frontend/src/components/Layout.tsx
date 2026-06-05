@@ -77,7 +77,7 @@ export default function Layout({ children }: Props) {
           </button>
         )}
 
-        <main className="flex-1 overflow-y-auto">
+        <main className={`flex-1 overflow-y-auto transition-all duration-200 ${!sidebarOpen ? 'pl-14' : ''}`}>
           {children}
         </main>
       </div>
