@@ -11,6 +11,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [adjusting, setAdjusting] = useState<StockLevel | null>(null)
+  const [refreshing, setRefreshing] = useState(false)
 
   const fetchAll = useCallback(async () => {
     try {
@@ -24,6 +25,13 @@ export default function Dashboard() {
       setLoading(false)
     }
   }, [])
+
+  async function handleRefresh() {
+    setRefreshing(true)
+    setLoading(true)
+    await fetchAll()
+    setRefreshing(false)
+  }
 
   useEffect(() => { fetchAll() }, [fetchAll])
 
@@ -51,13 +59,17 @@ export default function Dashboard() {
           <p className="mt-0.5 text-sm text-zinc-500 dark:text-zinc-400">Real-time inventory across all locations</p>
         </div>
         <button
-          onClick={fetchAll}
-          className="flex items-center gap-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3.5 py-2 text-sm font-medium text-zinc-600 dark:text-zinc-300 shadow-card transition-all duration-150 hover:border-zinc-300 dark:hover:border-zinc-600 hover:shadow-card-hover"
+          onClick={handleRefresh}
+          disabled={refreshing}
+          className="flex items-center gap-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3.5 py-2 text-sm font-medium text-zinc-600 dark:text-zinc-300 shadow-sm transition-all duration-150 hover:border-zinc-300 dark:hover:border-zinc-600 disabled:opacity-50"
         >
-          <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+          <svg
+            className={`h-3.5 w-3.5 ${refreshing ? 'animate-spin' : ''}`}
+            fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"
+          >
             <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h5M20 20v-5h-5M4 9a9 9 0 0115.9-2.1M20 15a9 9 0 01-15.9 2.1" />
           </svg>
-          Refresh
+          {refreshing ? 'Refreshing…' : 'Refresh'}
         </button>
       </div>
 
