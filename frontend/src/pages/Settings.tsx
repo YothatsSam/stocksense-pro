@@ -64,7 +64,7 @@ function useToasts() {
 
 function Card({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={`rounded-xl border border-zinc-800 bg-zinc-900/50 ${className}`}>
+    <div className={`rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 ${className}`}>
       {children}
     </div>
   )
@@ -73,7 +73,7 @@ function Card({ children, className = '' }: { children: React.ReactNode; classNa
 function SectionHeader({ title, description }: { title: string; description: string }) {
   return (
     <div className="mb-5">
-      <h2 className="text-base font-semibold text-white">{title}</h2>
+      <h2 className="text-base font-semibold text-zinc-900 dark:text-white">{title}</h2>
       <p className="mt-0.5 text-sm text-zinc-500">{description}</p>
     </div>
   )
@@ -82,14 +82,14 @@ function SectionHeader({ title, description }: { title: string; description: str
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="mb-1.5 block text-xs font-medium text-zinc-400">{label}</label>
+      <label className="mb-1.5 block text-xs font-medium text-zinc-500 dark:text-zinc-400">{label}</label>
       {children}
     </div>
   )
 }
 
-const inputCls = 'w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white placeholder-zinc-600 focus:outline-none focus:ring-1 focus:ring-brand-500 transition-colors'
-const inputReadOnlyCls = 'w-full rounded-lg border border-zinc-700/50 bg-zinc-800/40 px-3 py-2 text-sm text-zinc-500 cursor-not-allowed'
+const inputCls = 'w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:ring-1 focus:ring-brand-500 transition-colors'
+const inputReadOnlyCls = 'w-full rounded-lg border border-zinc-200 dark:border-zinc-700/50 bg-zinc-100 dark:bg-zinc-800/40 px-3 py-2 text-sm text-zinc-500 cursor-not-allowed'
 
 function SaveButton({ loading, label = 'Save changes' }: { loading: boolean; label?: string }) {
   return (
@@ -110,9 +110,9 @@ function Modal({ title, onClose, children }: {
 }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-      <div className="w-full max-w-md rounded-xl bg-zinc-900 border border-zinc-800 shadow-2xl">
-        <div className="flex items-center justify-between border-b border-zinc-800 px-5 py-4">
-          <h2 className="text-sm font-semibold text-white">{title}</h2>
+      <div className="w-full max-w-md rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-2xl">
+        <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 px-5 py-4">
+          <h2 className="text-sm font-semibold text-zinc-900 dark:text-white">{title}</h2>
           <button onClick={onClose} className="text-zinc-500 hover:text-zinc-200 transition-colors">
             <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -209,7 +209,7 @@ function ProfileSection({ toast }: { toast: (msg: string, type?: 'success' | 'er
       <SectionHeader title="Profile" description="Update your personal details and password." />
 
       <Card>
-        <form onSubmit={handleProfileSave} className="divide-y divide-zinc-800">
+        <form onSubmit={handleProfileSave} className="divide-y divide-zinc-200 dark:divide-zinc-800">
           <div className="grid gap-4 p-5 sm:grid-cols-2">
             <Field label="Full name">
               <input className={inputCls} value={name} onChange={e => setName(e.target.value)} placeholder="Your name" />
@@ -231,9 +231,9 @@ function ProfileSection({ toast }: { toast: (msg: string, type?: 'success' | 'er
       </Card>
 
       <Card>
-        <form onSubmit={handlePasswordSave} className="divide-y divide-zinc-800">
+        <form onSubmit={handlePasswordSave} className="divide-y divide-zinc-200 dark:divide-zinc-800">
           <div className="px-5 pt-4 pb-2">
-            <h3 className="text-sm font-medium text-white">Change password</h3>
+            <h3 className="text-sm font-medium text-zinc-900 dark:text-white">Change password</h3>
             <p className="text-xs text-zinc-500 mt-0.5">Must be at least 8 characters.</p>
           </div>
           <div className="grid gap-4 p-5 sm:grid-cols-3">
@@ -300,7 +300,7 @@ function OrganisationSection({ toast }: { toast: (msg: string, type?: 'success' 
       <SectionHeader title="Organisation" description="Update your business name and type." />
 
       <Card>
-        <form onSubmit={handleSave} className="divide-y divide-zinc-800">
+        <form onSubmit={handleSave} className="divide-y divide-zinc-200 dark:divide-zinc-800">
           <div className="grid gap-4 p-5 sm:grid-cols-2">
             <Field label="Business name">
               <input className={inputCls} value={name} onChange={e => setName(e.target.value)} placeholder="Your business name" />
@@ -383,7 +383,7 @@ function SubscriptionSection() {
           <div className="flex items-start justify-between gap-4">
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-base font-semibold text-white">{plan.label}</span>
+                <span className="text-base font-semibold text-zinc-900 dark:text-white">{plan.label}</span>
                 {org.subscription_plan === 'starter' && (
                   <span className="rounded-full bg-brand-500/20 border border-brand-500/30 px-2 py-0.5 text-[10px] font-semibold text-brand-400 uppercase tracking-wider">
                     Free Trial
@@ -400,11 +400,11 @@ function SubscriptionSection() {
             </a>
           </div>
 
-          <div className="mt-5 border-t border-zinc-800 pt-4">
-            <p className="mb-3 text-xs font-medium text-zinc-500 uppercase tracking-wider">What's included</p>
+          <div className="mt-5 border-t border-zinc-200 dark:border-zinc-800 pt-4">
+            <p className="mb-3 text-xs font-medium text-zinc-500 dark:text-zinc-500 uppercase tracking-wider">What's included</p>
             <ul className="space-y-2">
               {plan.features.map(f => (
-                <li key={f} className="flex items-center gap-2 text-sm text-zinc-300">
+                <li key={f} className="flex items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300">
                   <svg className="h-4 w-4 shrink-0 text-green-500" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                   </svg>
@@ -469,11 +469,11 @@ function NotificationsSection({ toast }: { toast: (msg: string, type?: 'success'
       <SectionHeader title="Notifications" description="Choose which emails you want to receive." />
 
       <Card>
-        <div className="divide-y divide-zinc-800">
+        <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
           {NOTIF_ITEMS.map(item => (
             <div key={item.key} className="flex items-center justify-between gap-4 px-5 py-4">
               <div>
-                <p className="text-sm font-medium text-zinc-200">{item.label}</p>
+                <p className="text-sm font-medium text-zinc-800 dark:text-zinc-200">{item.label}</p>
                 <p className="text-xs text-zinc-500 mt-0.5">{item.description}</p>
               </div>
               <Toggle
@@ -483,7 +483,7 @@ function NotificationsSection({ toast }: { toast: (msg: string, type?: 'success'
             </div>
           ))}
         </div>
-        <div className="flex justify-end border-t border-zinc-800 px-5 py-3">
+        <div className="flex justify-end border-t border-zinc-200 dark:border-zinc-800 px-5 py-3">
           <button
             onClick={handleSave}
             disabled={saving}
@@ -529,23 +529,23 @@ function TeamSection({ toast }: { toast: (msg: string, type?: 'success' | 'error
         ) : (
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-zinc-800">
+              <tr className="border-b border-zinc-200 dark:border-zinc-800">
                 {['Name', 'Email', 'Role', 'Joined'].map(h => (
-                  <th key={h} className="px-5 py-3 text-left text-xs font-medium text-zinc-500">{h}</th>
+                  <th key={h} className="px-5 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400">{h}</th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-800">
+            <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
               {team.map(m => (
-                <tr key={m.id} className="hover:bg-zinc-800/30 transition-colors">
-                  <td className="px-5 py-3 font-medium text-zinc-200">{m.name ?? <span className="text-zinc-600">—</span>}</td>
-                  <td className="px-5 py-3 text-zinc-400">{m.email}</td>
+                <tr key={m.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/30 transition-colors">
+                  <td className="px-5 py-3 font-medium text-zinc-800 dark:text-zinc-200">{m.name ?? <span className="text-zinc-400 dark:text-zinc-600">—</span>}</td>
+                  <td className="px-5 py-3 text-zinc-500 dark:text-zinc-400">{m.email}</td>
                   <td className="px-5 py-3">
                     <span className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-zinc-700/60 text-zinc-300 capitalize">
                       {m.role}
                     </span>
                   </td>
-                  <td className="px-5 py-3 text-zinc-500">
+                  <td className="px-5 py-3 text-zinc-500 dark:text-zinc-500">
                     {new Date(m.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
                   </td>
                 </tr>
@@ -724,9 +724,9 @@ export default function Settings() {
   }
 
   return (
-    <div className="flex min-h-full bg-zinc-950">
+    <div className="flex min-h-full bg-white dark:bg-zinc-950">
       {/* Inner left nav */}
-      <aside className="sticky top-0 h-screen w-52 shrink-0 border-r border-zinc-800 bg-zinc-950 px-3 py-6 hidden md:block">
+      <aside className="sticky top-0 h-screen w-52 shrink-0 border-r border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-3 py-6 hidden md:block">
         <p className="mb-3 px-2 text-[10px] font-semibold uppercase tracking-widest text-zinc-600">Settings</p>
         <nav className="space-y-0.5">
           {SECTIONS.map(s => (
@@ -735,10 +735,10 @@ export default function Settings() {
               onClick={() => scrollTo(s.id)}
               className={`w-full flex items-center gap-2.5 rounded-lg px-2 py-1.5 text-left text-sm font-medium transition-colors ${
                 active === s.id
-                  ? 'bg-zinc-800 text-white'
+                  ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white'
                   : s.id === 'danger'
-                    ? 'text-red-500/70 hover:bg-red-900/20 hover:text-red-400'
-                    : 'text-zinc-400 hover:bg-zinc-800/60 hover:text-zinc-100'
+                    ? 'text-red-500/70 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400'
+                    : 'text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800/60 hover:text-zinc-900 dark:hover:text-zinc-100'
               }`}
             >
               <span className="text-base leading-none">{s.icon}</span>
@@ -755,31 +755,31 @@ export default function Settings() {
             <ProfileSection toast={addToast} />
           </section>
 
-          <div className="h-px bg-zinc-800/60" />
+          <div className="h-px bg-zinc-200 dark:bg-zinc-800/60" />
 
           <section id="section-organisation">
             <OrganisationSection toast={addToast} />
           </section>
 
-          <div className="h-px bg-zinc-800/60" />
+          <div className="h-px bg-zinc-200 dark:bg-zinc-800/60" />
 
           <section id="section-subscription">
             <SubscriptionSection />
           </section>
 
-          <div className="h-px bg-zinc-800/60" />
+          <div className="h-px bg-zinc-200 dark:bg-zinc-800/60" />
 
           <section id="section-notifications">
             <NotificationsSection toast={addToast} />
           </section>
 
-          <div className="h-px bg-zinc-800/60" />
+          <div className="h-px bg-zinc-200 dark:bg-zinc-800/60" />
 
           <section id="section-team">
             <TeamSection toast={addToast} />
           </section>
 
-          <div className="h-px bg-zinc-800/60" />
+          <div className="h-px bg-zinc-200 dark:bg-zinc-800/60" />
 
           <section id="section-danger">
             <DangerSection />

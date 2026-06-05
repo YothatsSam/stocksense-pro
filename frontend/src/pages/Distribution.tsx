@@ -45,9 +45,9 @@ function Modal({ title, onClose, children }: {
 }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-      <div className="w-full max-w-lg rounded-xl bg-zinc-900 border border-zinc-800 shadow-2xl">
-        <div className="flex items-center justify-between border-b border-zinc-800 px-5 py-4">
-          <h2 className="text-sm font-semibold text-white">{title}</h2>
+      <div className="w-full max-w-lg rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-2xl">
+        <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 px-5 py-4">
+          <h2 className="text-sm font-semibold text-zinc-900 dark:text-white">{title}</h2>
           <button onClick={onClose} className="text-zinc-500 hover:text-zinc-200 transition-colors">
             <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -92,7 +92,7 @@ function OrdersTab() {
   return (
     <div>
       <div className="mb-4 flex items-center justify-between">
-        <p className="text-sm text-zinc-400">{orders.length} purchase order{orders.length !== 1 ? 's' : ''}</p>
+        <p className="text-sm text-zinc-500 dark:text-zinc-400">{orders.length} purchase order{orders.length !== 1 ? 's' : ''}</p>
         <button
           onClick={() => setShowNew(true)}
           className="rounded-lg bg-brand-500 px-3 py-1.5 text-xs font-medium text-white hover:bg-brand-600 transition-colors"
@@ -102,32 +102,32 @@ function OrdersTab() {
       </div>
 
       {loading ? (
-        <p className="text-sm text-zinc-500 py-8 text-center">Loading…</p>
+        <p className="text-sm text-zinc-500 dark:text-zinc-400 py-8 text-center">Loading…</p>
       ) : orders.length === 0 ? (
         <p className="text-sm text-zinc-500 py-8 text-center">No purchase orders yet.</p>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-zinc-800">
+        <div className="overflow-x-auto rounded-xl border border-zinc-200 dark:border-zinc-800">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-zinc-800 bg-zinc-900/60">
+              <tr className="border-b border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900/60">
                 {['Order #', 'Supplier', 'Items', 'Status', 'Expected Delivery', 'Actions'].map(h => (
-                  <th key={h} className="px-4 py-3 text-left text-xs font-medium text-zinc-500">{h}</th>
+                  <th key={h} className="px-4 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400">{h}</th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-800">
+            <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
               {orders.map(o => (
-                <tr key={o.id} className="bg-zinc-900/30 hover:bg-zinc-800/40 transition-colors">
-                  <td className="px-4 py-3 font-mono text-zinc-300">#{o.id}</td>
-                  <td className="px-4 py-3 text-zinc-200">{o.supplier_name}</td>
-                  <td className="px-4 py-3 text-zinc-400">{o.total_items}</td>
+                <tr key={o.id} className="bg-white dark:bg-zinc-900/30 hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition-colors">
+                  <td className="px-4 py-3 font-mono text-zinc-600 dark:text-zinc-300">#{o.id}</td>
+                  <td className="px-4 py-3 text-zinc-800 dark:text-zinc-200">{o.supplier_name}</td>
+                  <td className="px-4 py-3 text-zinc-500 dark:text-zinc-400">{o.total_items}</td>
                   <td className="px-4 py-3">
                     <Badge cfg={ORDER_STATUS[o.status] ?? ORDER_STATUS.draft} />
                   </td>
-                  <td className="px-4 py-3 text-zinc-400">
+                  <td className="px-4 py-3 text-zinc-500 dark:text-zinc-400">
                     {o.expected_delivery
                       ? new Date(o.expected_delivery).toLocaleDateString()
-                      : <span className="text-zinc-600">—</span>}
+                      : <span className="text-zinc-400 dark:text-zinc-600">—</span>}
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex gap-2">
@@ -225,7 +225,7 @@ function NewOrderModal({ suppliers, products, locations, onClose, onCreated }: {
           <div>
             <label className="mb-1 block text-xs text-zinc-400">Supplier *</label>
             <select value={supplierId} onChange={e => setSupplierId(e.target.value)}
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-brand-500">
+              className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-brand-500">
               <option value="">Select supplier…</option>
               {suppliers.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
             </select>
@@ -233,7 +233,7 @@ function NewOrderModal({ suppliers, products, locations, onClose, onCreated }: {
           <div>
             <label className="mb-1 block text-xs text-zinc-400">Location</label>
             <select value={locationId} onChange={e => setLocationId(e.target.value)}
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-brand-500">
+              className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-brand-500">
               <option value="">Any location…</option>
               {locations.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
             </select>
@@ -255,16 +255,16 @@ function NewOrderModal({ suppliers, products, locations, onClose, onCreated }: {
             {items.map((row, i) => (
               <div key={i} className="grid grid-cols-[1fr_80px_80px_24px] gap-2 items-center">
                 <select value={row.product_id || ''} onChange={e => updateRow(i, 'product_id', e.target.value)}
-                  className="rounded-lg border border-zinc-700 bg-zinc-800 px-2 py-1.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-brand-500">
+                  className="rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-2 py-1.5 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-brand-500">
                   <option value="">Product…</option>
                   {products.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
                 </select>
                 <input type="number" min="1" placeholder="Qty" value={row.quantity_ordered}
                   onChange={e => updateRow(i, 'quantity_ordered', e.target.value)}
-                  className="rounded-lg border border-zinc-700 bg-zinc-800 px-2 py-1.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-brand-500" />
+                  className="rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-2 py-1.5 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-brand-500" />
                 <input type="number" min="0" step="0.01" placeholder="Price" value={row.unit_price}
                   onChange={e => updateRow(i, 'unit_price', e.target.value)}
-                  className="rounded-lg border border-zinc-700 bg-zinc-800 px-2 py-1.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-brand-500" />
+                  className="rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-2 py-1.5 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-brand-500" />
                 {items.length > 1 && (
                   <button onClick={() => removeRow(i)} className="text-zinc-600 hover:text-red-400 transition-colors text-base leading-none">×</button>
                 )}
@@ -276,7 +276,7 @@ function NewOrderModal({ suppliers, products, locations, onClose, onCreated }: {
         <div>
           <label className="mb-1 block text-xs text-zinc-400">Notes</label>
           <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={2}
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-brand-500 resize-none" />
+            className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-brand-500 resize-none" />
         </div>
 
         <div className="flex justify-end gap-2 pt-1">
@@ -380,7 +380,7 @@ function ShipmentsTab() {
   return (
     <div>
       <div className="mb-4 flex items-center justify-between">
-        <p className="text-sm text-zinc-400">{shipments.length} shipment{shipments.length !== 1 ? 's' : ''}</p>
+        <p className="text-sm text-zinc-500 dark:text-zinc-400">{shipments.length} shipment{shipments.length !== 1 ? 's' : ''}</p>
         <button
           onClick={() => setShowNew(true)}
           className="rounded-lg bg-brand-500 px-3 py-1.5 text-xs font-medium text-white hover:bg-brand-600 transition-colors"
@@ -390,22 +390,22 @@ function ShipmentsTab() {
       </div>
 
       {loading ? (
-        <p className="text-sm text-zinc-500 py-8 text-center">Loading…</p>
+        <p className="text-sm text-zinc-500 dark:text-zinc-400 py-8 text-center">Loading…</p>
       ) : shipments.length === 0 ? (
         <p className="text-sm text-zinc-500 py-8 text-center">No shipments yet.</p>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-zinc-800">
+        <div className="overflow-x-auto rounded-xl border border-zinc-200 dark:border-zinc-800">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-zinc-800 bg-zinc-900/60">
+              <tr className="border-b border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900/60">
                 {['Reference', 'Type', 'Location', 'Status', 'Date'].map(h => (
-                  <th key={h} className="px-4 py-3 text-left text-xs font-medium text-zinc-500">{h}</th>
+                  <th key={h} className="px-4 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400">{h}</th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-800">
+            <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
               {shipments.map(s => (
-                <tr key={s.id} className="bg-zinc-900/30 hover:bg-zinc-800/40 transition-colors">
+                <tr key={s.id} className="bg-white dark:bg-zinc-900/30 hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition-colors">
                   <td className="px-4 py-3 font-mono text-zinc-300">{s.reference}</td>
                   <td className="px-4 py-3">
                     <Badge cfg={SHIP_TYPE[s.type] ?? SHIP_TYPE.inbound} />
@@ -486,7 +486,7 @@ function NewShipmentModal({ locations, onClose, onCreated }: {
           <div>
             <label className="mb-1 block text-xs text-zinc-400">Type</label>
             <select value={type} onChange={e => setType(e.target.value as 'inbound' | 'outbound')}
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-brand-500">
+              className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-brand-500">
               <option value="inbound">Inbound</option>
               <option value="outbound">Outbound</option>
             </select>
@@ -494,7 +494,7 @@ function NewShipmentModal({ locations, onClose, onCreated }: {
           <div>
             <label className="mb-1 block text-xs text-zinc-400">Status</label>
             <select value={status} onChange={e => setStatus(e.target.value as 'pending' | 'in_transit' | 'delivered')}
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-brand-500">
+              className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-brand-500">
               <option value="pending">Pending</option>
               <option value="in_transit">In Transit</option>
               <option value="delivered">Delivered</option>
@@ -514,7 +514,7 @@ function NewShipmentModal({ locations, onClose, onCreated }: {
         <div>
           <label className="mb-1 block text-xs text-zinc-400">Notes</label>
           <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={2}
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-brand-500 resize-none" />
+            className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-brand-500 resize-none" />
         </div>
 
         <div className="flex justify-end gap-2 pt-1">
@@ -550,7 +550,7 @@ function SuppliersTab() {
   return (
     <div>
       <div className="mb-4 flex items-center justify-between">
-        <p className="text-sm text-zinc-400">{suppliers.length} supplier{suppliers.length !== 1 ? 's' : ''}</p>
+        <p className="text-sm text-zinc-500 dark:text-zinc-400">{suppliers.length} supplier{suppliers.length !== 1 ? 's' : ''}</p>
         <button
           onClick={() => setShowNew(true)}
           className="rounded-lg bg-brand-500 px-3 py-1.5 text-xs font-medium text-white hover:bg-brand-600 transition-colors"
@@ -560,27 +560,27 @@ function SuppliersTab() {
       </div>
 
       {loading ? (
-        <p className="text-sm text-zinc-500 py-8 text-center">Loading…</p>
+        <p className="text-sm text-zinc-500 dark:text-zinc-400 py-8 text-center">Loading…</p>
       ) : suppliers.length === 0 ? (
         <p className="text-sm text-zinc-500 py-8 text-center">No suppliers yet.</p>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-zinc-800">
+        <div className="overflow-x-auto rounded-xl border border-zinc-200 dark:border-zinc-800">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-zinc-800 bg-zinc-900/60">
+              <tr className="border-b border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900/60">
                 {['Name', 'Contact', 'Email', 'Phone', 'Products'].map(h => (
-                  <th key={h} className="px-4 py-3 text-left text-xs font-medium text-zinc-500">{h}</th>
+                  <th key={h} className="px-4 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400">{h}</th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-800">
+            <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
               {suppliers.map(s => (
-                <tr key={s.id} className="bg-zinc-900/30 hover:bg-zinc-800/40 transition-colors">
-                  <td className="px-4 py-3 font-medium text-zinc-200">{s.name}</td>
-                  <td className="px-4 py-3 text-zinc-400">{s.contact_person ?? <span className="text-zinc-600">—</span>}</td>
-                  <td className="px-4 py-3 text-zinc-400">{s.contact_email ?? <span className="text-zinc-600">—</span>}</td>
-                  <td className="px-4 py-3 text-zinc-400">{s.contact_phone ?? <span className="text-zinc-600">—</span>}</td>
-                  <td className="px-4 py-3 text-zinc-400">{s.products_supplied}</td>
+                <tr key={s.id} className="bg-white dark:bg-zinc-900/30 hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition-colors">
+                  <td className="px-4 py-3 font-medium text-zinc-800 dark:text-zinc-200">{s.name}</td>
+                  <td className="px-4 py-3 text-zinc-500 dark:text-zinc-400">{s.contact_person ?? <span className="text-zinc-400 dark:text-zinc-600">—</span>}</td>
+                  <td className="px-4 py-3 text-zinc-500 dark:text-zinc-400">{s.contact_email ?? <span className="text-zinc-400 dark:text-zinc-600">—</span>}</td>
+                  <td className="px-4 py-3 text-zinc-500 dark:text-zinc-400">{s.contact_phone ?? <span className="text-zinc-400 dark:text-zinc-600">—</span>}</td>
+                  <td className="px-4 py-3 text-zinc-500 dark:text-zinc-400">{s.products_supplied}</td>
                 </tr>
               ))}
             </tbody>
@@ -644,19 +644,19 @@ function NewSupplierModal({ onClose, onCreated }: { onClose: () => void; onCreat
           <div>
             <label className="mb-1 block text-xs text-zinc-400">Email</label>
             <input type="email" value={email} onChange={e => setEmail(e.target.value)}
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-brand-500" />
+              className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-brand-500" />
           </div>
           <div>
             <label className="mb-1 block text-xs text-zinc-400">Phone</label>
             <input type="tel" value={phone} onChange={e => setPhone(e.target.value)}
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-brand-500" />
+              className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-brand-500" />
           </div>
         </div>
 
         <div>
           <label className="mb-1 block text-xs text-zinc-400">Notes</label>
           <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={2}
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-brand-500 resize-none" />
+            className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-brand-500 resize-none" />
         </div>
 
         <div className="flex justify-end gap-2 pt-1">
@@ -685,23 +685,23 @@ export default function Distribution() {
   const [activeTab, setActiveTab] = useState<TabId>('orders')
 
   return (
-    <div className="min-h-full bg-zinc-950 p-6">
+    <div className="min-h-full bg-zinc-50 dark:bg-zinc-950 p-6">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-xl font-semibold text-white">Distribution Centre</h1>
+        <h1 className="text-xl font-semibold text-zinc-900 dark:text-white">Distribution Centre</h1>
         <p className="mt-0.5 text-sm text-zinc-500">Manage purchase orders, shipments, and suppliers</p>
       </div>
 
       {/* Tabs */}
-      <div className="mb-6 flex gap-1 rounded-xl border border-zinc-800 bg-zinc-900/60 p-1 w-fit">
+      <div className="mb-6 flex gap-1 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900/60 p-1 w-fit">
         {TABS.map(tab => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
               activeTab === tab.id
-                ? 'bg-zinc-800 text-white shadow-sm'
-                : 'text-zinc-400 hover:text-zinc-200'
+                ? 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-sm'
+                : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200'
             }`}
           >
             {tab.label}

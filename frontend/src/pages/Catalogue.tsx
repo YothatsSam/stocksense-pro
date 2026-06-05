@@ -15,9 +15,9 @@ function Modal({ title, onClose, children }: {
 }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-      <div className="w-full max-w-md rounded-xl bg-zinc-900 border border-zinc-800 shadow-2xl">
-        <div className="flex items-center justify-between border-b border-zinc-800 px-5 py-4">
-          <h2 className="text-sm font-semibold text-white">{title}</h2>
+      <div className="w-full max-w-md rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-2xl">
+        <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 px-5 py-4">
+          <h2 className="text-sm font-semibold text-zinc-900 dark:text-white">{title}</h2>
           <button onClick={onClose} className="text-zinc-500 hover:text-zinc-200 transition-colors">
             <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -98,7 +98,7 @@ function LocationsSection() {
     <section>
       <div className="mb-4 flex items-center justify-between">
         <div>
-          <h2 className="text-base font-semibold text-white">Locations</h2>
+          <h2 className="text-base font-semibold text-zinc-900 dark:text-white">Locations</h2>
           <p className="text-xs text-zinc-500 mt-0.5">Stores, restaurants, and warehouses in your organisation</p>
         </div>
         <button
@@ -114,26 +114,26 @@ function LocationsSection() {
       ) : locations.length === 0 ? (
         <p className="text-sm text-zinc-500 py-6 text-center">No locations yet.</p>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-zinc-800">
+        <div className="overflow-x-auto rounded-xl border border-zinc-200 dark:border-zinc-800">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-zinc-800 bg-zinc-900/60">
+              <tr className="border-b border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900/60">
                 {['Name', 'Type', 'Address', 'Products', 'Actions'].map(h => (
-                  <th key={h} className="px-4 py-3 text-left text-xs font-medium text-zinc-500">{h}</th>
+                  <th key={h} className="px-4 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400">{h}</th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-800">
+            <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
               {locations.map(loc => (
-                <tr key={loc.id} className="bg-zinc-900/30 hover:bg-zinc-800/40 transition-colors">
-                  <td className="px-4 py-3 font-medium text-zinc-200">{loc.name}</td>
+                <tr key={loc.id} className="bg-white dark:bg-zinc-900/30 hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition-colors">
+                  <td className="px-4 py-3 font-medium text-zinc-800 dark:text-zinc-200">{loc.name}</td>
                   <td className="px-4 py-3">
                     <span className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-zinc-700/60 text-zinc-300">
                       {BUSINESS_TYPE_LABELS[loc.business_type] ?? loc.business_type}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-zinc-400">{loc.address ?? <span className="text-zinc-600">—</span>}</td>
-                  <td className="px-4 py-3 text-zinc-400">{loc.product_count}</td>
+                  <td className="px-4 py-3 text-zinc-500 dark:text-zinc-400">{loc.address ?? <span className="text-zinc-400 dark:text-zinc-600">—</span>}</td>
+                  <td className="px-4 py-3 text-zinc-500 dark:text-zinc-400">{loc.product_count}</td>
                   <td className="px-4 py-3">
                     <button
                       onClick={() => setDeleting(loc)}
@@ -199,13 +199,13 @@ function AddLocationModal({ onClose, onCreated }: { onClose: () => void; onCreat
           <label className="mb-1 block text-xs text-zinc-400">Location Name *</label>
           <input type="text" value={name} onChange={e => setName(e.target.value)}
             placeholder="e.g. Warehouse North"
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-brand-500" />
+            className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-brand-500" />
         </div>
 
         <div>
           <label className="mb-1 block text-xs text-zinc-400">Location Type</label>
           <select value={businessType} onChange={e => setBusinessType(e.target.value)}
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-brand-500">
+            className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-brand-500">
             <option value="retail">Retail Store</option>
             <option value="restaurant">Restaurant</option>
             <option value="distribution">Warehouse</option>
@@ -216,7 +216,7 @@ function AddLocationModal({ onClose, onCreated }: { onClose: () => void; onCreat
           <label className="mb-1 block text-xs text-zinc-400">Address</label>
           <input type="text" value={address} onChange={e => setAddress(e.target.value)}
             placeholder="e.g. 12 Industrial Way, Manchester"
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-brand-500" />
+            className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-brand-500" />
         </div>
 
         <div className="flex justify-end gap-2 pt-1">
@@ -253,7 +253,7 @@ function ProductsSection() {
     <section>
       <div className="mb-4 flex items-center justify-between">
         <div>
-          <h2 className="text-base font-semibold text-white">Products</h2>
+          <h2 className="text-base font-semibold text-zinc-900 dark:text-white">Products</h2>
           <p className="text-xs text-zinc-500 mt-0.5">SKUs and items tracked across your locations</p>
         </div>
         <button
@@ -269,22 +269,22 @@ function ProductsSection() {
       ) : products.length === 0 ? (
         <p className="text-sm text-zinc-500 py-6 text-center">No products yet.</p>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-zinc-800">
+        <div className="overflow-x-auto rounded-xl border border-zinc-200 dark:border-zinc-800">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-zinc-800 bg-zinc-900/60">
+              <tr className="border-b border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900/60">
                 {['SKU', 'Name', 'Unit', 'Reorder Point', 'Actions'].map(h => (
-                  <th key={h} className="px-4 py-3 text-left text-xs font-medium text-zinc-500">{h}</th>
+                  <th key={h} className="px-4 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400">{h}</th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-800">
+            <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
               {products.map(p => (
-                <tr key={p.id} className="bg-zinc-900/30 hover:bg-zinc-800/40 transition-colors">
-                  <td className="px-4 py-3 font-mono text-xs text-zinc-400">{p.sku}</td>
-                  <td className="px-4 py-3 font-medium text-zinc-200">{p.name}</td>
-                  <td className="px-4 py-3 text-zinc-400">{p.unit}</td>
-                  <td className="px-4 py-3 text-zinc-400">{Number(p.reorder_point).toLocaleString()}</td>
+                <tr key={p.id} className="bg-white dark:bg-zinc-900/30 hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition-colors">
+                  <td className="px-4 py-3 font-mono text-xs text-zinc-500 dark:text-zinc-400">{p.sku}</td>
+                  <td className="px-4 py-3 font-medium text-zinc-800 dark:text-zinc-200">{p.name}</td>
+                  <td className="px-4 py-3 text-zinc-500 dark:text-zinc-400">{p.unit}</td>
+                  <td className="px-4 py-3 text-zinc-500 dark:text-zinc-400">{Number(p.reorder_point).toLocaleString()}</td>
                   <td className="px-4 py-3">
                     <button
                       onClick={() => setDeleting(p)}
@@ -383,7 +383,7 @@ function AddProductModal({ onClose, onCreated }: { onClose: () => void; onCreate
           <label className="mb-1 block text-xs text-zinc-400">Product Name *</label>
           <input type="text" value={name} onChange={e => handleNameChange(e.target.value)}
             placeholder="e.g. Whole Milk"
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-brand-500" />
+            className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-brand-500" />
         </div>
 
         <div>
@@ -398,14 +398,14 @@ function AddProductModal({ onClose, onCreated }: { onClose: () => void; onCreate
           <div>
             <label className="mb-1 block text-xs text-zinc-400">Unit</label>
             <select value={unit} onChange={e => setUnit(e.target.value)}
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-brand-500">
+              className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-brand-500">
               {UNITS.map(u => <option key={u} value={u}>{u}</option>)}
             </select>
           </div>
           <div>
             <label className="mb-1 block text-xs text-zinc-400">Reorder Point</label>
             <input type="number" min="0" value={reorderPoint} onChange={e => setReorderPoint(e.target.value)}
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-brand-500" />
+              className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-brand-500" />
           </div>
         </div>
 
@@ -413,12 +413,12 @@ function AddProductModal({ onClose, onCreated }: { onClose: () => void; onCreate
           <div>
             <label className="mb-1 block text-xs text-zinc-400">Initial Stock Qty</label>
             <input type="number" min="0" value={initialQty} onChange={e => setInitialQty(e.target.value)}
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-brand-500" />
+              className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-brand-500" />
           </div>
           <div>
             <label className="mb-1 block text-xs text-zinc-400">Add Stock To</label>
             <select value={locationId} onChange={e => setLocationId(e.target.value)}
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-brand-500">
+              className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-brand-500">
               <option value="">No location</option>
               {locations.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
             </select>
@@ -441,15 +441,15 @@ function AddProductModal({ onClose, onCreated }: { onClose: () => void; onCreate
 
 export default function Catalogue() {
   return (
-    <div className="min-h-full bg-zinc-950 p-6">
+    <div className="min-h-full bg-zinc-50 dark:bg-zinc-950 p-6">
       <div className="mb-8">
-        <h1 className="text-xl font-semibold text-white">Catalogue</h1>
+        <h1 className="text-xl font-semibold text-zinc-900 dark:text-white">Catalogue</h1>
         <p className="mt-0.5 text-sm text-zinc-500">Manage your locations and product catalogue</p>
       </div>
 
       <div className="space-y-10 max-w-5xl">
         <LocationsSection />
-        <div className="h-px bg-zinc-800" />
+        <div className="h-px bg-zinc-200 dark:bg-zinc-800" />
         <ProductsSection />
       </div>
     </div>
