@@ -60,10 +60,11 @@ export default function Layout({ children }: Props) {
 
       {/* Main content — absolutely fills viewport, left edge shifts with sidebar */}
       <div
-        className="h-screen flex flex-col overflow-hidden"
+        className="h-screen flex flex-col overflow-hidden w-full"
         style={{
           marginLeft: contentLeft,
-          transition: 'margin-left 200ms ease-in-out',
+          width: `calc(100% - ${contentLeft}px)`,
+          transition: 'margin-left 200ms ease-in-out, width 200ms ease-in-out',
         }}
       >
         {/* Floating toggle — only when sidebar is closed */}
