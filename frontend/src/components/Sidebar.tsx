@@ -2,6 +2,7 @@ import { NavLink } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useTheme } from '../context/ThemeContext'
 import type { Theme } from '../context/ThemeContext'
+import { PanelIcon } from './Layout'
 
 const NAV_ITEMS = [
   { to: '/',             label: 'Dashboard',    emoji: '📦', exact: true,  disabled: false },
@@ -43,9 +44,10 @@ const THEME_OPTIONS: { value: Theme; label: string; icon: React.ReactNode }[] = 
 
 interface Props {
   onClose?: () => void
+  onToggle?: () => void
 }
 
-export default function Sidebar({ onClose }: Props) {
+export default function Sidebar({ onClose, onToggle }: Props) {
   const { userEmail, signOut } = useAuth()
   const { theme, setTheme } = useTheme()
   const initials = userEmail ? userEmail.slice(0, 2).toUpperCase() : 'SS'
@@ -53,12 +55,21 @@ export default function Sidebar({ onClose }: Props) {
   return (
     <div className="flex h-full flex-col bg-sidebar select-none">
 
-      {/* Logo */}
+      {/* Logo + collapse button */}
       <div className="flex items-center gap-3 px-5 py-5">
         <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-brand-500 text-xs font-bold text-white tracking-tight">
           SS
         </div>
-        <span className="text-sm font-semibold text-white">StockSense Pro</span>
+        <span className="flex-1 text-sm font-semibold text-white">StockSense Pro</span>
+        {onToggle && (
+          <button
+            onClick={onToggle}
+            title="Collapse sidebar"
+            className="text-zinc-500 hover:text-zinc-300 transition-colors duration-150 p-0.5"
+          >
+            <PanelIcon className="h-4 w-4" />
+          </button>
+        )}
       </div>
 
       {/* Top separator */}

@@ -5,11 +5,19 @@ interface Props {
   children: React.ReactNode
 }
 
+// Panel icon — shared between sidebar close button and floating open button
+export function PanelIcon({ className = 'h-5 w-5' }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+      <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9 3v18" />
+    </svg>
+  )
+}
+
 export default function Layout({ children }: Props) {
-  // Default open on desktop, closed on mobile
   const [sidebarOpen, setSidebarOpen] = useState(() => window.innerWidth >= 1024)
 
-  // Close sidebar when resizing down to mobile
   useEffect(() => {
     function handleResize() {
       if (window.innerWidth < 1024) setSidebarOpen(false)
@@ -35,42 +43,25 @@ export default function Layout({ children }: Props) {
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <Sidebar onClose={() => setSidebarOpen(false)} />
+        <Sidebar
+          onClose={() => setSidebarOpen(false)}
+          onToggle={() => setSidebarOpen(v => !v)}
+        />
       </aside>
 
-      {/* Main */}
-      <div className="flex flex-1 flex-col overflow-hidden min-w-0">
+      {/* Main — no top bar, content fills full height */}
+      <div className="relative flex flex-1 flex-col overflow-hidden min-w-0">
 
-        {/* Top bar — always visible */}
-        <header className="flex items-center gap-3 border-b border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-4 py-3">
+        {/* Floating toggle — only visible when sidebar is closed */}
+        {!sidebarOpen && (
           <button
-            onClick={() => setSidebarOpen(v => !v)}
-            title="Toggle sidebar"
-            className="rounded-md p-1.5 text-zinc-500 dark:text-zinc-400 transition-colors duration-150 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-700 dark:hover:text-zinc-200"
+            onClick={() => setSidebarOpen(true)}
+            title="Open sidebar"
+            className="fixed top-3 left-3 z-40 flex items-center justify-center rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-1.5 text-zinc-500 dark:text-zinc-400 shadow-card transition-all duration-150 hover:bg-zinc-50 dark:hover:bg-zinc-700 hover:text-zinc-700 dark:hover:text-zinc-200"
           >
-            {sidebarOpen ? (
-              /* Panel open — left section highlighted */
-              <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
-                <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 3v18" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 7h1M5 10h1M5 13h1" strokeWidth={1.5} />
-              </svg>
-            ) : (
-              /* Panel closed — no highlight */
-              <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
-                <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 3v18" />
-              </svg>
-            )}
+            <PanelIcon />
           </button>
-
-          {/* Show app name on mobile when sidebar is closed */}
-          {!sidebarOpen && (
-            <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-              StockSense Pro
-            </span>
-          )}
-        </header>
+        )}
 
         <main className="flex-1 overflow-y-auto">
           {children}
