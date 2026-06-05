@@ -36,6 +36,16 @@ async function request<T>(path: string, options?: RequestInit & { skipAuthRedire
   return res.json() as Promise<T>
 }
 
+// ── Health / keep-alive ───────────────────────────────────────────────
+export async function ping(): Promise<boolean> {
+  try {
+    const res = await fetch(`${BASE}/health`)
+    return res.ok
+  } catch {
+    return false
+  }
+}
+
 // ── Auth ─────────────────────────────────────────────────────────────
 export const login = (email: string, password: string) =>
   request<AuthResponse>('/auth/login', {
