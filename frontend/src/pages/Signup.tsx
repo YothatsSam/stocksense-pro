@@ -89,26 +89,26 @@ export default function Signup() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 px-4 py-12">
+    <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-zinc-900 px-4 py-12">
       <div className="w-full max-w-[480px]">
 
         {/* Card */}
-        <div className="rounded-2xl bg-white px-8 py-8 shadow-login border border-zinc-200">
+        <div className="rounded-2xl bg-white dark:bg-zinc-800 px-8 py-8 shadow-login border border-zinc-200 dark:border-zinc-700">
 
           {/* Header */}
           <div className="mb-7 flex flex-col items-center">
             <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-brand-500 text-sm font-bold text-white tracking-tight shadow-sm">
               SS
             </div>
-            <h1 className="text-xl font-semibold text-zinc-900">Create your account</h1>
-            <p className="mt-1 text-sm text-zinc-500">30-day free trial · No credit card required</p>
+            <h1 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">Create your account</h1>
+            <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">30-day free trial · No credit card required</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
 
             {/* Business name */}
             <div>
-              <label className="block text-xs font-medium uppercase tracking-wide text-zinc-500 mb-1.5">
+              <label className="block text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400 mb-1.5">
                 Business name
               </label>
               <input
@@ -118,13 +118,13 @@ export default function Signup() {
                 value={form.business_name}
                 onChange={set('business_name')}
                 placeholder="FreshMart Ltd"
-                className="block w-full rounded-lg border border-zinc-200 bg-white px-3.5 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 transition-colors duration-150 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+                className="block w-full rounded-lg border border-zinc-200 dark:border-zinc-600 bg-white dark:bg-zinc-700 px-3.5 py-2.5 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 transition-colors duration-150 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
               />
             </div>
 
             {/* Business type */}
             <div>
-              <label className="block text-xs font-medium uppercase tracking-wide text-zinc-500 mb-1.5">
+              <label className="block text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400 mb-1.5">
                 Business type
               </label>
               <div className="grid grid-cols-3 gap-2">
@@ -135,8 +135,8 @@ export default function Signup() {
                     onClick={() => setForm(prev => ({ ...prev, business_type: bt.value }))}
                     className={`flex flex-col items-center gap-1.5 rounded-lg border px-2 py-3 text-center text-xs font-medium transition-all duration-150 ${
                       form.business_type === bt.value
-                        ? 'border-brand-500 bg-brand-50 text-brand-700 ring-2 ring-brand-500/20'
-                        : 'border-zinc-200 text-zinc-600 hover:border-zinc-300 hover:bg-zinc-50'
+                        ? 'border-brand-500 bg-brand-50 dark:bg-brand-500/10 text-brand-700 dark:text-brand-400 ring-2 ring-brand-500/20'
+                        : 'border-zinc-200 dark:border-zinc-600 text-zinc-600 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-zinc-500 hover:bg-zinc-50 dark:hover:bg-zinc-700'
                     }`}
                   >
                     <span className="text-lg">{bt.emoji}</span>
@@ -149,7 +149,7 @@ export default function Signup() {
             {/* Two-column row: name + email */}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-medium uppercase tracking-wide text-zinc-500 mb-1.5">
+                <label className="block text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400 mb-1.5">
                   Your name
                 </label>
                 <input
@@ -157,11 +157,11 @@ export default function Signup() {
                   value={form.name}
                   onChange={set('name')}
                   placeholder="Jane Smith"
-                  className="block w-full rounded-lg border border-zinc-200 bg-white px-3.5 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 transition-colors duration-150 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+                  className="block w-full rounded-lg border border-zinc-200 dark:border-zinc-600 bg-white dark:bg-zinc-700 px-3.5 py-2.5 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 transition-colors duration-150 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium uppercase tracking-wide text-zinc-500 mb-1.5">
+                <label className="block text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400 mb-1.5">
                   Work email
                 </label>
                 <input
@@ -170,14 +170,14 @@ export default function Signup() {
                   value={form.email}
                   onChange={set('email')}
                   placeholder="jane@company.com"
-                  className="block w-full rounded-lg border border-zinc-200 bg-white px-3.5 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 transition-colors duration-150 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+                  className="block w-full rounded-lg border border-zinc-200 dark:border-zinc-600 bg-white dark:bg-zinc-700 px-3.5 py-2.5 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 transition-colors duration-150 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
                 />
               </div>
             </div>
 
             {/* Password */}
             <div>
-              <label className="block text-xs font-medium uppercase tracking-wide text-zinc-500 mb-1.5">
+              <label className="block text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400 mb-1.5">
                 Password
               </label>
               <div className="relative">
@@ -187,12 +187,12 @@ export default function Signup() {
                   value={form.password}
                   onChange={set('password')}
                   placeholder="Create a strong password"
-                  className="block w-full rounded-lg border border-zinc-200 bg-white px-3.5 py-2.5 pr-10 text-sm text-zinc-900 placeholder-zinc-400 transition-colors duration-150 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+                  className="block w-full rounded-lg border border-zinc-200 dark:border-zinc-600 bg-white dark:bg-zinc-700 px-3.5 py-2.5 pr-10 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 transition-colors duration-150 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(v => !v)}
-                  className="absolute inset-y-0 right-0 flex items-center px-3 text-zinc-400 hover:text-zinc-600"
+                  className="absolute inset-y-0 right-0 flex items-center px-3 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
                   tabIndex={-1}
                 >
                   {showPassword ? (
@@ -230,7 +230,7 @@ export default function Signup() {
 
             {/* Confirm password */}
             <div>
-              <label className="block text-xs font-medium uppercase tracking-wide text-zinc-500 mb-1.5">
+              <label className="block text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400 mb-1.5">
                 Confirm password
               </label>
               <div className="relative">
@@ -240,16 +240,16 @@ export default function Signup() {
                   value={form.confirm}
                   onChange={set('confirm')}
                   placeholder="Repeat password"
-                  className={`block w-full rounded-lg border px-3.5 py-2.5 pr-10 text-sm placeholder-zinc-400 transition-colors duration-150 focus:outline-none focus:ring-2 ${
+                  className={`block w-full rounded-lg border px-3.5 py-2.5 pr-10 text-sm placeholder-zinc-400 dark:placeholder-zinc-500 transition-colors duration-150 focus:outline-none focus:ring-2 ${
                     form.confirm && form.confirm !== form.password
-                      ? 'border-red-300 bg-red-50 text-red-900 focus:border-red-500 focus:ring-red-500/20'
-                      : 'border-zinc-200 bg-white text-zinc-900 focus:border-brand-500 focus:ring-brand-500/20'
+                      ? 'border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/20 text-red-900 dark:text-red-300 focus:border-red-500 focus:ring-red-500/20'
+                      : 'border-zinc-200 dark:border-zinc-600 bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 focus:border-brand-500 focus:ring-brand-500/20'
                   }`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirm(v => !v)}
-                  className="absolute inset-y-0 right-0 flex items-center px-3 text-zinc-400 hover:text-zinc-600"
+                  className="absolute inset-y-0 right-0 flex items-center px-3 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
                   tabIndex={-1}
                 >
                   {showConfirm ? (
@@ -294,14 +294,14 @@ export default function Signup() {
             </button>
 
             {/* Legal note */}
-            <p className="text-center text-xs text-zinc-400">
+            <p className="text-center text-xs text-zinc-400 dark:text-zinc-500">
               By signing up you agree to our Terms of Service and Privacy Policy.
             </p>
           </form>
         </div>
 
         {/* Login link */}
-        <p className="mt-5 text-center text-sm text-zinc-500">
+        <p className="mt-5 text-center text-sm text-zinc-500 dark:text-zinc-400">
           Already have an account?{' '}
           <Link to="/login" className="font-medium text-brand-600 hover:text-brand-700 transition-colors">
             Sign in

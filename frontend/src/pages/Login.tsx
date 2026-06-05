@@ -36,24 +36,24 @@ export default function Login() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-zinc-900 px-4">
       <div className="w-full max-w-[400px]">
 
         {/* Card */}
-        <div className="rounded-2xl bg-white px-8 py-8 shadow-login border border-zinc-200">
+        <div className="rounded-2xl bg-white dark:bg-zinc-800 px-8 py-8 shadow-login border border-zinc-200 dark:border-zinc-700">
 
           {/* Monogram */}
           <div className="mb-6 flex flex-col items-center">
             <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-brand-500 text-sm font-bold text-white tracking-tight shadow-sm">
               SS
             </div>
-            <h1 className="text-xl font-semibold text-zinc-900">Sign in to StockSense Pro</h1>
-            <p className="mt-1 text-sm text-zinc-500">Enter your credentials to continue</p>
+            <h1 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">Sign in to StockSense Pro</h1>
+            <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">Enter your credentials to continue</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-medium uppercase tracking-wide text-zinc-500 mb-1.5">
+              <label className="block text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400 mb-1.5">
                 Email address
               </label>
               <input
@@ -63,12 +63,12 @@ export default function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@company.com"
-                className="block w-full rounded-lg border border-zinc-200 bg-white px-3.5 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 transition-colors duration-150 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+                className="block w-full rounded-lg border border-zinc-200 dark:border-zinc-600 bg-white dark:bg-zinc-700 px-3.5 py-2.5 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 transition-colors duration-150 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium uppercase tracking-wide text-zinc-500 mb-1.5">
+              <label className="block text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400 mb-1.5">
                 Password
               </label>
               <div className="relative">
@@ -78,12 +78,12 @@ export default function Login() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="block w-full rounded-lg border border-zinc-200 bg-white px-3.5 py-2.5 pr-10 text-sm text-zinc-900 placeholder-zinc-400 transition-colors duration-150 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+                  className="block w-full rounded-lg border border-zinc-200 dark:border-zinc-600 bg-white dark:bg-zinc-700 px-3.5 py-2.5 pr-10 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 transition-colors duration-150 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(v => !v)}
-                  className="absolute inset-y-0 right-0 flex items-center px-3 text-zinc-400 hover:text-zinc-600"
+                  className="absolute inset-y-0 right-0 flex items-center px-3 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
                   tabIndex={-1}
                 >
                   {showPassword ? (
@@ -128,7 +128,7 @@ export default function Login() {
         </div>
 
         {/* Sign up link */}
-        <p className="mt-5 text-center text-sm text-zinc-500">
+        <p className="mt-5 text-center text-sm text-zinc-500 dark:text-zinc-400">
           Don't have an account?{' '}
           <Link to="/signup" className="font-medium text-brand-600 hover:text-brand-700 transition-colors">
             Sign up free

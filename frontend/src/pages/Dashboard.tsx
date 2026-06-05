@@ -42,17 +42,17 @@ export default function Dashboard() {
   const locationCount = new Set(stock.map((s) => s.location_id)).size
 
   return (
-    <div className="min-h-full bg-zinc-50 px-8 py-8">
+    <div className="min-h-full bg-zinc-50 dark:bg-zinc-900 px-8 py-8">
 
       {/* Page header */}
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold text-zinc-900">Dashboard</h1>
-          <p className="mt-0.5 text-sm text-zinc-500">Real-time inventory across all locations</p>
+          <h1 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">Dashboard</h1>
+          <p className="mt-0.5 text-sm text-zinc-500 dark:text-zinc-400">Real-time inventory across all locations</p>
         </div>
         <button
           onClick={fetchAll}
-          className="flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3.5 py-2 text-sm font-medium text-zinc-600 shadow-card transition-all duration-150 hover:border-zinc-300 hover:shadow-card-hover"
+          className="flex items-center gap-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3.5 py-2 text-sm font-medium text-zinc-600 dark:text-zinc-300 shadow-card transition-all duration-150 hover:border-zinc-300 dark:hover:border-zinc-600 hover:shadow-card-hover"
         >
           <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h5M20 20v-5h-5M4 9a9 9 0 0115.9-2.1M20 15a9 9 0 01-15.9 2.1" />
@@ -136,20 +136,20 @@ function MetricCard({
 }) {
   return (
     <div
-      className={`group rounded-2xl border bg-white px-5 py-5 shadow-card transition-all duration-150 hover:shadow-card-hover hover:scale-[1.01] ${
-        alert && value && value > 0 ? 'border-red-100' : 'border-zinc-200'
+      className={`group rounded-2xl border bg-white dark:bg-zinc-800 px-5 py-5 shadow-card transition-all duration-150 hover:shadow-card-hover hover:scale-[1.01] ${
+        alert && value && value > 0 ? 'border-red-100 dark:border-red-900' : 'border-zinc-200 dark:border-zinc-700'
       }`}
     >
       <div className="flex items-start justify-between">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.06em] text-zinc-400">{label}</p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.06em] text-zinc-400 dark:text-zinc-500">{label}</p>
         <span className="text-base leading-none">{icon}</span>
       </div>
       {value === null ? (
-        <div className="mt-3 h-8 w-16 animate-pulse rounded-md bg-zinc-100" />
+        <div className="mt-3 h-8 w-16 animate-pulse rounded-md bg-zinc-100 dark:bg-zinc-700" />
       ) : (
         <p
           className={`mt-2 text-[28px] font-bold leading-none tracking-tight ${
-            alert && value > 0 ? 'text-red-600' : 'text-zinc-900'
+            alert && value > 0 ? 'text-red-600' : 'text-zinc-900 dark:text-zinc-100'
           }`}
         >
           {value}
@@ -173,18 +173,18 @@ function StockChart({ stock }: { stock: StockLevel[] }) {
   const max = Math.max(...entries.map(([, v]) => v))
 
   return (
-    <div className="rounded-2xl border border-zinc-200 bg-white px-5 py-5 shadow-card">
-      <p className="mb-5 text-[11px] font-semibold uppercase tracking-[0.06em] text-zinc-400">
+    <div className="rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-5 py-5 shadow-card">
+      <p className="mb-5 text-[11px] font-semibold uppercase tracking-[0.06em] text-zinc-400 dark:text-zinc-500">
         Stock by Location
       </p>
       <div className="space-y-4">
         {entries.map(([name, total]) => (
           <div key={name}>
             <div className="mb-1.5 flex items-center justify-between">
-              <span className="text-sm font-medium text-zinc-700">{name}</span>
-              <span className="text-xs font-semibold text-zinc-500">{total.toFixed(0)}</span>
+              <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{name}</span>
+              <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">{total.toFixed(0)}</span>
             </div>
-            <div className="h-1.5 w-full overflow-hidden rounded-full bg-zinc-100">
+            <div className="h-1.5 w-full overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-700">
               <div
                 className="h-1.5 rounded-full bg-brand-500 transition-all duration-700"
                 style={{ width: max > 0 ? `${(total / max) * 100}%` : '0%' }}
@@ -201,16 +201,16 @@ function StockChart({ stock }: { stock: StockLevel[] }) {
 
 function TableSkeleton() {
   return (
-    <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-card">
-      <div className="border-b border-zinc-100 bg-zinc-50 px-5 py-3">
-        <div className="h-3 w-32 animate-pulse rounded bg-zinc-200" />
+    <div className="overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 shadow-card">
+      <div className="border-b border-zinc-100 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-700/50 px-5 py-3">
+        <div className="h-3 w-32 animate-pulse rounded bg-zinc-200 dark:bg-zinc-600" />
       </div>
-      <div className="divide-y divide-zinc-100">
+      <div className="divide-y divide-zinc-100 dark:divide-zinc-700">
         {Array.from({ length: 5 }).map((_, i) => (
           <div key={i} className="flex items-center gap-6 px-5 py-4">
-            <div className="h-2.5 w-16 animate-pulse rounded bg-zinc-100" />
-            <div className="h-2.5 w-36 animate-pulse rounded bg-zinc-100" />
-            <div className="ml-auto h-2.5 w-10 animate-pulse rounded bg-zinc-100" />
+            <div className="h-2.5 w-16 animate-pulse rounded bg-zinc-100 dark:bg-zinc-700" />
+            <div className="h-2.5 w-36 animate-pulse rounded bg-zinc-100 dark:bg-zinc-700" />
+            <div className="ml-auto h-2.5 w-10 animate-pulse rounded bg-zinc-100 dark:bg-zinc-700" />
           </div>
         ))}
       </div>

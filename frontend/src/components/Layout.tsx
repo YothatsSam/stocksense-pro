@@ -9,7 +9,7 @@ export default function Layout({ children }: Props) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className="flex h-screen bg-zinc-50">
+    <div className="flex h-screen bg-zinc-50 dark:bg-zinc-900">
 
       {/* Mobile backdrop */}
       {sidebarOpen && (
@@ -31,7 +31,7 @@ export default function Layout({ children }: Props) {
       {/* Main */}
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Mobile top bar */}
-        <header className="flex items-center border-b border-zinc-200 bg-white px-4 py-3 lg:hidden">
+        <header className="flex items-center border-b border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-4 py-3 lg:hidden">
           <button
             onClick={() => setSidebarOpen(true)}
             className="rounded-md p-1.5 text-zinc-500 transition-colors duration-150 hover:bg-zinc-100"
@@ -40,7 +40,7 @@ export default function Layout({ children }: Props) {
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
-          <span className="ml-3 text-sm font-semibold text-zinc-900">StockSense Pro</span>
+          <span className="ml-3 text-sm font-semibold text-zinc-900 dark:text-zinc-100">StockSense Pro</span>
         </header>
 
         <main className="flex-1 overflow-y-auto">
