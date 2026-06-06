@@ -40,7 +40,7 @@ export default function Login() {
         businessType:     data.businessType,
         organisationName: data.organisationName,
       })
-      navigate('/')
+      navigate('/dashboard')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Invalid credentials.')
     } finally {

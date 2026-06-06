@@ -5,7 +5,7 @@ import type { Theme } from '../context/ThemeContext'
 import { PanelIcon } from './Layout'
 
 const NAV_ITEMS = [
-  { to: '/',             label: 'Dashboard',    emoji: '📦', exact: true,  disabled: false },
+  { to: '/dashboard',    label: 'Dashboard',    emoji: '📦', exact: true,  disabled: false },
   { to: '/restaurant',   label: 'Restaurant',   emoji: '🍽️', exact: false, disabled: false },
   { to: '/distribution', label: 'Distribution', emoji: '🏭', exact: false, disabled: false },
   { to: '/catalogue',    label: 'Catalogue',    emoji: '🗂️', exact: false, disabled: false },

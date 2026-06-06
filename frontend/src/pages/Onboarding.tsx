@@ -294,7 +294,7 @@ function Step3({ locationName }: { locationName: string }) {
             <p className="text-xs text-zinc-500">View real-time stock levels</p>
           </div>
           <button
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/dashboard')}
             className="ml-auto rounded-lg bg-brand-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-600 transition-colors"
           >
             Go to dashboard
@@ -311,7 +311,7 @@ function Step3({ locationName }: { locationName: string }) {
       </div>
 
       <button
-        onClick={() => navigate('/')}
+        onClick={() => navigate('/dashboard')}
         className="w-full rounded-lg bg-brand-500 py-2.5 text-sm font-semibold text-white hover:bg-brand-600 transition-colors"
       >
         Go to dashboard
