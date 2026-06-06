@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, } from 'react'
 import {
   getSettingsLocations, createSettingsLocation, updateSettingsLocation, deleteSettingsLocation,
   getSettingsProducts, createSettingsProduct, updateSettingsProduct, deleteSettingsProduct,
@@ -597,17 +597,41 @@ function AddProductModal({ onClose, onCreated }: { onClose: () => void; onCreate
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function Catalogue() {
+  const [refreshKey, setRefreshKey] = useState(0)
+  const [refreshing, setRefreshing] = useState(false)
+
+  async function handleRefresh() {
+    setRefreshing(true)
+    setRefreshKey(k => k + 1)
+    setTimeout(() => setRefreshing(false), 600)
+  }
+
   return (
     <div className="min-h-full bg-zinc-50 dark:bg-zinc-950 p-6">
-      <div className="mb-8">
-        <h1 className="text-xl font-semibold text-zinc-900 dark:text-white">Catalogue</h1>
-        <p className="mt-0.5 text-sm text-zinc-500">Manage your locations and product catalogue</p>
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-semibold text-zinc-900 dark:text-white">Catalogue</h1>
+          <p className="mt-0.5 text-sm text-zinc-500">Manage your locations and product catalogue</p>
+        </div>
+        <button
+          onClick={handleRefresh}
+          disabled={refreshing}
+          className="flex items-center gap-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3.5 py-2 text-sm font-medium text-zinc-600 dark:text-zinc-300 shadow-sm transition-all duration-150 hover:border-zinc-300 dark:hover:border-zinc-600 disabled:opacity-50"
+        >
+          <svg
+            className={`h-3.5 w-3.5 ${refreshing ? 'animate-spin' : ''}`}
+            fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h5M20 20v-5h-5M4 9a9 9 0 0115.9-2.1M20 15a9 9 0 01-15.9 2.1" />
+          </svg>
+          {refreshing ? 'Refreshing…' : 'Refresh'}
+        </button>
       </div>
 
       <div className="space-y-10">
-        <LocationsSection />
+        <LocationsSection key={`loc-${refreshKey}`} />
         <div className="h-px bg-zinc-200 dark:bg-zinc-800" />
-        <ProductsSection />
+        <ProductsSection key={`prod-${refreshKey}`} />
       </div>
     </div>
   )
