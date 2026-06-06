@@ -85,6 +85,19 @@ export const createRecipe = (data: {
     body: JSON.stringify(data),
   })
 
+export const updateRecipe = (id: number, data: {
+  name: string
+  location_id: number
+  ingredients: { product_id: number; quantity_required: number }[]
+}) =>
+  request<{ success: boolean }>(`/restaurant/recipes/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  })
+
+export const deleteRecipe = (id: number) =>
+  request<{ success: boolean }>(`/restaurant/recipes/${id}`, { method: 'DELETE' })
+
 export const serveRecipe = (id: number) =>
   request<{ success: boolean }>(`/restaurant/recipes/${id}/serve`, {
     method: 'POST',
@@ -189,6 +202,12 @@ export const createSettingsLocation = (data: {
     body: JSON.stringify(data),
   })
 
+export const updateSettingsLocation = (id: number, data: { name: string; address?: string }) =>
+  request<SettingsLocation>(`/settings/locations/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  })
+
 export const deleteSettingsLocation = (id: number) =>
   request<{ success: boolean }>(`/settings/locations/${id}`, { method: 'DELETE' })
 
@@ -204,6 +223,14 @@ export const createSettingsProduct = (data: {
 }) =>
   request<SettingsProduct>('/settings/products', {
     method: 'POST',
+    body: JSON.stringify(data),
+  })
+
+export const updateSettingsProduct = (id: number, data: {
+  name: string; sku: string; unit: string; unit_cost?: number
+}) =>
+  request<SettingsProduct>(`/settings/products/${id}`, {
+    method: 'PUT',
     body: JSON.stringify(data),
   })
 

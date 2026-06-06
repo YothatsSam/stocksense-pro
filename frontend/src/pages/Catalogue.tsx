@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import {
-  getSettingsLocations, createSettingsLocation, deleteSettingsLocation,
-  getSettingsProducts, createSettingsProduct, deleteSettingsProduct,
+  getSettingsLocations, createSettingsLocation, updateSettingsLocation, deleteSettingsLocation,
+  getSettingsProducts, createSettingsProduct, updateSettingsProduct, deleteSettingsProduct,
   getOnboardingLocations,
 } from '../api/client'
 import type { SettingsLocation, SettingsProduct, Location } from '../types'
@@ -84,6 +84,7 @@ function LocationsSection() {
   const [locations, setLocations] = useState<SettingsLocation[]>([])
   const [loading, setLoading]     = useState(true)
   const [showNew, setShowNew]     = useState(false)
+  const [editing, setEditing]     = useState<SettingsLocation | null>(null)
   const [deleting, setDeleting]   = useState<SettingsLocation | null>(null)
 
   const load = useCallback(async () => {
@@ -135,12 +136,20 @@ function LocationsSection() {
                   <td className="px-4 py-3 text-zinc-500 dark:text-zinc-400">{loc.address ?? <span className="text-zinc-400 dark:text-zinc-600">—</span>}</td>
                   <td className="px-4 py-3 text-zinc-500 dark:text-zinc-400">{loc.product_count}</td>
                   <td className="px-4 py-3">
-                    <button
-                      onClick={() => setDeleting(loc)}
-                      className="rounded px-2 py-1 text-xs font-medium text-red-500 hover:bg-red-900/30 transition-colors"
-                    >
-                      Delete
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => setEditing(loc)}
+                        className="rounded px-2 py-1 text-xs font-medium text-blue-500 hover:bg-blue-900/20 transition-colors"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => setDeleting(loc)}
+                        className="rounded px-2 py-1 text-xs font-medium text-red-500 hover:bg-red-900/30 transition-colors"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -156,6 +165,14 @@ function LocationsSection() {
         />
       )}
 
+      {editing && (
+        <EditLocationModal
+          location={editing}
+          onClose={() => setEditing(null)}
+          onSaved={() => { setEditing(null); load() }}
+        />
+      )}
+
       {deleting && (
         <DeleteConfirmModal
           label={deleting.name}
@@ -164,6 +181,58 @@ function LocationsSection() {
         />
       )}
     </section>
+  )
+}
+
+// ── Edit Location Modal ───────────────────────────────────────────────────────
+
+function EditLocationModal({ location, onClose, onSaved }: {
+  location: SettingsLocation
+  onClose: () => void
+  onSaved: () => void
+}) {
+  const [name, setName]       = useState(location.name)
+  const [address, setAddress] = useState(location.address ?? '')
+  const [loading, setLoading] = useState(false)
+  const [error, setError]     = useState('')
+
+  async function submit() {
+    setError('')
+    if (!name.trim()) return setError('Location name is required.')
+    setLoading(true)
+    try {
+      await updateSettingsLocation(location.id, { name, address })
+      onSaved()
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : 'Failed to update location.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <Modal title="Edit Location" onClose={onClose}>
+      <div className="space-y-4">
+        {error && <p className="rounded-lg bg-red-900/30 border border-red-800 px-3 py-2 text-xs text-red-400">{error}</p>}
+        <div>
+          <label className="mb-1 block text-xs text-zinc-400">Location Name *</label>
+          <input type="text" value={name} onChange={e => setName(e.target.value)}
+            className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-brand-500" />
+        </div>
+        <div>
+          <label className="mb-1 block text-xs text-zinc-400">Address</label>
+          <input type="text" value={address} onChange={e => setAddress(e.target.value)}
+            className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-brand-500" />
+        </div>
+        <div className="flex justify-end gap-2 pt-1">
+          <button onClick={onClose} className="rounded-lg px-4 py-2 text-sm text-zinc-400 hover:text-zinc-200 transition-colors">Cancel</button>
+          <button onClick={submit} disabled={loading}
+            className="rounded-lg bg-brand-500 px-4 py-2 text-sm font-medium text-white hover:bg-brand-600 disabled:opacity-50 transition-colors">
+            {loading ? 'Saving…' : 'Save changes'}
+          </button>
+        </div>
+      </div>
+    </Modal>
   )
 }
 
@@ -239,6 +308,7 @@ function ProductsSection() {
   const [products, setProducts] = useState<SettingsProduct[]>([])
   const [loading, setLoading]   = useState(true)
   const [showNew, setShowNew]   = useState(false)
+  const [editing, setEditing]   = useState<SettingsProduct | null>(null)
   const [deleting, setDeleting] = useState<SettingsProduct | null>(null)
 
   const load = useCallback(async () => {
@@ -286,12 +356,20 @@ function ProductsSection() {
                   <td className="px-4 py-3 text-zinc-500 dark:text-zinc-400">{p.unit}</td>
                   <td className="px-4 py-3 text-zinc-500 dark:text-zinc-400">{Number(p.reorder_point).toLocaleString()}</td>
                   <td className="px-4 py-3">
-                    <button
-                      onClick={() => setDeleting(p)}
-                      className="rounded px-2 py-1 text-xs font-medium text-red-500 hover:bg-red-900/30 transition-colors"
-                    >
-                      Delete
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => setEditing(p)}
+                        className="rounded px-2 py-1 text-xs font-medium text-blue-500 hover:bg-blue-900/20 transition-colors"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => setDeleting(p)}
+                        className="rounded px-2 py-1 text-xs font-medium text-red-500 hover:bg-red-900/30 transition-colors"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -307,6 +385,14 @@ function ProductsSection() {
         />
       )}
 
+      {editing && (
+        <EditProductModal
+          product={editing}
+          onClose={() => setEditing(null)}
+          onSaved={() => { setEditing(null); load() }}
+        />
+      )}
+
       {deleting && (
         <DeleteConfirmModal
           label={deleting.name}
@@ -315,6 +401,77 @@ function ProductsSection() {
         />
       )}
     </section>
+  )
+}
+
+// ── Edit Product Modal ────────────────────────────────────────────────────────
+
+function EditProductModal({ product, onClose, onSaved }: {
+  product: SettingsProduct
+  onClose: () => void
+  onSaved: () => void
+}) {
+  const [name, setName]         = useState(product.name)
+  const [sku, setSku]           = useState(product.sku)
+  const [unit, setUnit]         = useState(product.unit)
+  const [unitCost, setUnitCost] = useState(String(product.unit_cost ?? 0))
+  const [loading, setLoading]   = useState(false)
+  const [error, setError]       = useState('')
+
+  async function submit() {
+    setError('')
+    if (!name.trim()) return setError('Product name is required.')
+    if (!sku.trim())  return setError('SKU is required.')
+    setLoading(true)
+    try {
+      await updateSettingsProduct(product.id, { name, sku, unit, unit_cost: Number(unitCost) || 0 })
+      onSaved()
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : 'Failed to update product.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <Modal title="Edit Product" onClose={onClose}>
+      <div className="space-y-4">
+        {error && <p className="rounded-lg bg-red-900/30 border border-red-800 px-3 py-2 text-xs text-red-400">{error}</p>}
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="mb-1 block text-xs text-zinc-400">Product Name *</label>
+            <input type="text" value={name} onChange={e => setName(e.target.value)}
+              className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-brand-500" />
+          </div>
+          <div>
+            <label className="mb-1 block text-xs text-zinc-400">SKU *</label>
+            <input type="text" value={sku} onChange={e => setSku(e.target.value.toUpperCase())}
+              className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm font-mono text-zinc-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-brand-500" />
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="mb-1 block text-xs text-zinc-400">Unit</label>
+            <select value={unit} onChange={e => setUnit(e.target.value)}
+              className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-brand-500">
+              {UNITS.map(u => <option key={u} value={u}>{u}</option>)}
+            </select>
+          </div>
+          <div>
+            <label className="mb-1 block text-xs text-zinc-400">Unit Cost (£)</label>
+            <input type="number" min="0" step="0.01" value={unitCost} onChange={e => setUnitCost(e.target.value)}
+              className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-brand-500" />
+          </div>
+        </div>
+        <div className="flex justify-end gap-2 pt-1">
+          <button onClick={onClose} className="rounded-lg px-4 py-2 text-sm text-zinc-400 hover:text-zinc-200 transition-colors">Cancel</button>
+          <button onClick={submit} disabled={loading}
+            className="rounded-lg bg-brand-500 px-4 py-2 text-sm font-medium text-white hover:bg-brand-600 disabled:opacity-50 transition-colors">
+            {loading ? 'Saving…' : 'Save changes'}
+          </button>
+        </div>
+      </div>
+    </Modal>
   )
 }
 

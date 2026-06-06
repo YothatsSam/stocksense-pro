@@ -40,6 +40,24 @@ router.post('/locations', async (req, res, next) => {
   } catch (err) { next(err) }
 })
 
+// PUT /api/settings/locations/:id
+router.put('/locations/:id', async (req, res, next) => {
+  const orgId = req.user.organisationId
+  const locId = parseInt(req.params.id, 10)
+  const { name, address } = req.body
+  if (!name) return res.status(400).json({ error: 'name is required.' })
+  try {
+    const { rows: [loc] } = await pool.query(
+      `UPDATE locations SET name = $1, address = $2
+       WHERE id = $3 AND organisation_id = $4
+       RETURNING *`,
+      [name.trim(), (address || '').trim() || null, locId, orgId]
+    )
+    if (!loc) return res.status(404).json({ error: 'Location not found.' })
+    res.json(loc)
+  } catch (err) { next(err) }
+})
+
 // DELETE /api/settings/locations/:id
 router.delete('/locations/:id', async (req, res, next) => {
   const orgId = req.user.organisationId
@@ -122,6 +140,27 @@ router.post('/products', async (req, res, next) => {
     }
     next(err)
   } finally { client.release() }
+})
+
+// PUT /api/settings/products/:id
+router.put('/products/:id', async (req, res, next) => {
+  const orgId = req.user.organisationId
+  const productId = parseInt(req.params.id, 10)
+  const { name, sku, unit, unit_cost } = req.body
+  if (!name || !sku) return res.status(400).json({ error: 'name and sku are required.' })
+  try {
+    const { rows: [product] } = await pool.query(
+      `UPDATE products SET name = $1, sku = $2, unit = $3, unit_cost = $4
+       WHERE id = $5 AND organisation_id = $6
+       RETURNING *`,
+      [name.trim(), sku.trim().toUpperCase(), unit || 'unit', Number(unit_cost) || 0, productId, orgId]
+    )
+    if (!product) return res.status(404).json({ error: 'Product not found.' })
+    res.json(product)
+  } catch (err) {
+    if (err.code === '23505') return res.status(409).json({ error: `SKU "${sku}" is already in use.` })
+    next(err)
+  }
 })
 
 // DELETE /api/settings/products/:id

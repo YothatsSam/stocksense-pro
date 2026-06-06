@@ -165,6 +165,67 @@ async function serveRecipe(req, res, next) {
   }
 }
 
+// PUT /api/restaurant/recipes/:id
+async function updateRecipe(req, res, next) {
+  const recipeId = Number(req.params.id)
+  const orgId = req.user.organisationId
+  const { name, location_id, ingredients } = req.body
+
+  if (!name || !location_id || !Array.isArray(ingredients) || ingredients.length === 0) {
+    return res.status(400).json({ error: 'name, location_id, and at least one ingredient are required.' })
+  }
+
+  const client = await pool.connect()
+  try {
+    await client.query('BEGIN')
+
+    const { rows: existing } = await client.query(
+      'SELECT id FROM recipes WHERE id = $1 AND organisation_id = $2',
+      [recipeId, orgId]
+    )
+    if (existing.length === 0) {
+      await client.query('ROLLBACK')
+      return res.status(404).json({ error: 'Recipe not found.' })
+    }
+
+    await client.query(
+      'UPDATE recipes SET name = $1, location_id = $2 WHERE id = $3 AND organisation_id = $4',
+      [name, location_id, recipeId, orgId]
+    )
+
+    // Replace all ingredients
+    await client.query('DELETE FROM recipe_ingredients WHERE recipe_id = $1', [recipeId])
+    for (const ing of ingredients) {
+      await client.query(
+        'INSERT INTO recipe_ingredients (recipe_id, product_id, quantity_required) VALUES ($1, $2, $3)',
+        [recipeId, ing.product_id, ing.quantity_required]
+      )
+    }
+
+    await client.query('COMMIT')
+    res.json({ success: true })
+  } catch (err) {
+    await client.query('ROLLBACK')
+    next(err)
+  } finally {
+    client.release()
+  }
+}
+
+// DELETE /api/restaurant/recipes/:id
+async function deleteRecipe(req, res, next) {
+  const recipeId = Number(req.params.id)
+  const orgId = req.user.organisationId
+  try {
+    const { rowCount } = await pool.query(
+      'DELETE FROM recipes WHERE id = $1 AND organisation_id = $2',
+      [recipeId, orgId]
+    )
+    if (rowCount === 0) return res.status(404).json({ error: 'Recipe not found.' })
+    res.json({ success: true })
+  } catch (err) { next(err) }
+}
+
 // GET /api/restaurant/products
 async function getProducts(req, res, next) {
   const orgId = req.user.organisationId
@@ -179,4 +240,4 @@ async function getProducts(req, res, next) {
   }
 }
 
-module.exports = { getRecipes, createRecipe, serveRecipe, getProducts }
+module.exports = { getRecipes, createRecipe, updateRecipe, deleteRecipe, serveRecipe, getProducts }

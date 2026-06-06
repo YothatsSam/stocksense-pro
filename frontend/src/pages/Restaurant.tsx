@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import {
   createRecipe,
+  updateRecipe,
+  deleteRecipe,
   getLocations,
   getRecipes,
   getRestaurantProducts,
@@ -15,6 +17,7 @@ export default function Restaurant() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [showForm, setShowForm] = useState(false)
+  const [editing, setEditing] = useState<Recipe | null>(null)
 
   const fetchAll = useCallback(async () => {
     try {
@@ -37,6 +40,12 @@ export default function Restaurant() {
     await fetchAll()
   }
 
+  async function handleDelete(id: number) {
+    if (!window.confirm('Delete this recipe? This cannot be undone.')) return
+    await deleteRecipe(id)
+    await fetchAll()
+  }
+
   return (
     <div className="min-h-full bg-zinc-50 dark:bg-zinc-900 px-8 py-8">
 
@@ -47,7 +56,7 @@ export default function Restaurant() {
           <p className="mt-0.5 text-sm text-zinc-500 dark:text-zinc-400">Recipes and dish serving with automatic stock deduction</p>
         </div>
         <button
-          onClick={() => setShowForm(!showForm)}
+          onClick={() => { setShowForm(!showForm); setEditing(null) }}
           className={`flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-sm font-medium transition-all duration-150 ${
             showForm
               ? 'border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-700'
@@ -79,12 +88,14 @@ export default function Restaurant() {
         </div>
       )}
 
-      {showForm && (
+      {(showForm || editing) && (
         <div className="mb-8">
           <RecipeForm
             products={products}
             locations={locations}
-            onSaved={async () => { setShowForm(false); await fetchAll() }}
+            existing={editing ?? undefined}
+            onSaved={async () => { setShowForm(false); setEditing(null); await fetchAll() }}
+            onCancel={() => { setShowForm(false); setEditing(null) }}
           />
         </div>
       )}
@@ -108,6 +119,8 @@ export default function Restaurant() {
               key={recipe.id}
               recipe={recipe}
               onServe={() => handleServe(recipe.id)}
+              onEdit={() => { setEditing(recipe); setShowForm(false); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
+              onDelete={() => handleDelete(recipe.id)}
             />
           ))}
         </div>
@@ -118,7 +131,12 @@ export default function Restaurant() {
 
 // ─── Recipe Card ─────────────────────────────────────────────────────────────
 
-function RecipeCard({ recipe, onServe }: { recipe: Recipe; onServe: () => Promise<void> }) {
+function RecipeCard({ recipe, onServe, onEdit, onDelete }: {
+  recipe: Recipe
+  onServe: () => Promise<void>
+  onEdit: () => void
+  onDelete: () => void
+}) {
   const [serving, setServing] = useState(false)
   const [success, setSuccess] = useState(false)
   const [serveError, setServeError] = useState<string | null>(null)
@@ -159,9 +177,29 @@ function RecipeCard({ recipe, onServe }: { recipe: Recipe; onServe: () => Promis
             <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">{recipe.name}</h3>
             <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">{recipe.location_name}</p>
           </div>
-          <div className="text-right">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.06em] text-zinc-400 dark:text-zinc-500">Food cost</p>
-            <p className="text-sm font-bold text-zinc-900 dark:text-zinc-100">£{recipe.food_cost.toFixed(2)}</p>
+          <div className="flex items-center gap-1">
+            <div className="text-right mr-2">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.06em] text-zinc-400 dark:text-zinc-500">Food cost</p>
+              <p className="text-sm font-bold text-zinc-900 dark:text-zinc-100">£{recipe.food_cost.toFixed(2)}</p>
+            </div>
+            <button
+              onClick={onEdit}
+              title="Edit recipe"
+              className="rounded-md p-1.5 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-600 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors"
+            >
+              <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z" />
+              </svg>
+            </button>
+            <button
+              onClick={onDelete}
+              title="Delete recipe"
+              className="rounded-md p-1.5 text-zinc-400 hover:bg-red-100 dark:hover:bg-red-900/40 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+            >
+              <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+              </svg>
+            </button>
           </div>
         </div>
         {hasLowIngredient && (
@@ -241,19 +279,26 @@ interface IngredientRow {
 function RecipeForm({
   products,
   locations,
+  existing,
   onSaved,
+  onCancel,
 }: {
   products: Product[]
   locations: Location[]
+  existing?: Recipe
   onSaved: () => void
+  onCancel: () => void
 }) {
-  const [name, setName] = useState('')
+  const isEdit = !!existing
+  const [name, setName] = useState(existing?.name ?? '')
   const [locationId, setLocationId] = useState<number | ''>(
-    locations.length > 0 ? locations[0].id : ''
+    existing?.location_id ?? (locations.length > 0 ? locations[0].id : '')
   )
-  const [ingredients, setIngredients] = useState<IngredientRow[]>([
-    { product_id: '', quantity_required: '' },
-  ])
+  const [ingredients, setIngredients] = useState<IngredientRow[]>(
+    existing?.ingredients?.length
+      ? existing.ingredients.map(i => ({ product_id: i.product_id, quantity_required: String(i.quantity_required) }))
+      : [{ product_id: '', quantity_required: '' }]
+  )
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -288,15 +333,20 @@ function RecipeForm({
     }
 
     setLoading(true)
+    const payload = {
+      name,
+      location_id: locationId as number,
+      ingredients: ingredients.map((ing) => ({
+        product_id: ing.product_id as number,
+        quantity_required: Number(ing.quantity_required),
+      })),
+    }
     try {
-      await createRecipe({
-        name,
-        location_id: locationId as number,
-        ingredients: ingredients.map((ing) => ({
-          product_id: ing.product_id as number,
-          quantity_required: Number(ing.quantity_required),
-        })),
-      })
+      if (isEdit && existing) {
+        await updateRecipe(existing.id, payload)
+      } else {
+        await createRecipe(payload)
+      }
       onSaved()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create recipe.')
@@ -310,7 +360,10 @@ function RecipeForm({
 
   return (
     <div className="rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-6 py-6 shadow-card">
-      <h3 className="mb-5 text-sm font-semibold text-zinc-900 dark:text-zinc-100">New Recipe</h3>
+      <div className="mb-5 flex items-center justify-between">
+        <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">{isEdit ? 'Edit Recipe' : 'New Recipe'}</h3>
+        <button type="button" onClick={onCancel} className="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors">Cancel</button>
+      </div>
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="grid gap-5 sm:grid-cols-2">
           <div>
@@ -405,7 +458,7 @@ function RecipeForm({
             disabled={loading}
             className="rounded-lg bg-brand-500 px-6 py-2.5 text-sm font-semibold text-white transition-all duration-150 hover:bg-brand-600 disabled:opacity-50"
           >
-            {loading ? 'Saving…' : 'Save recipe'}
+            {loading ? 'Saving…' : isEdit ? 'Save changes' : 'Save recipe'}
           </button>
         </div>
       </form>
