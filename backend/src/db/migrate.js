@@ -190,6 +190,9 @@ const statements = [
   )`,
 
   `ALTER TABLE suppliers ADD COLUMN IF NOT EXISTS products_supplied TEXT NOT NULL DEFAULT ''`,
+
+  // ── Selling price on recipes ─────────────────────────────────────────
+  `ALTER TABLE recipes ADD COLUMN IF NOT EXISTS selling_price NUMERIC(10,2) NOT NULL DEFAULT 0`,
 ]
 
 async function migrate() {

@@ -5,7 +5,7 @@ async function getRecipes(req, res, next) {
   const orgId = req.user.organisationId
   try {
     const { rows: recipes } = await pool.query(`
-      SELECT r.id, r.name, r.location_id, l.name AS location_name
+      SELECT r.id, r.name, r.location_id, r.selling_price, l.name AS location_name
       FROM recipes r
       JOIN locations l ON l.id = r.location_id
       WHERE r.organisation_id = $1
@@ -49,7 +49,7 @@ async function getRecipes(req, res, next) {
 
 // POST /api/restaurant/recipes
 async function createRecipe(req, res, next) {
-  const { name, location_id, ingredients } = req.body
+  const { name, location_id, selling_price, ingredients } = req.body
   const orgId = req.user.organisationId
 
   if (!name || !location_id || !Array.isArray(ingredients) || ingredients.length === 0) {
@@ -73,8 +73,8 @@ async function createRecipe(req, res, next) {
     }
 
     const { rows } = await client.query(
-      'INSERT INTO recipes (organisation_id, name, location_id) VALUES ($1, $2, $3) RETURNING *',
-      [orgId, name, location_id]
+      'INSERT INTO recipes (organisation_id, name, location_id, selling_price) VALUES ($1, $2, $3, $4) RETURNING *',
+      [orgId, name, location_id, Number(selling_price) || 0]
     )
     const recipe = rows[0]
 
@@ -169,7 +169,7 @@ async function serveRecipe(req, res, next) {
 async function updateRecipe(req, res, next) {
   const recipeId = Number(req.params.id)
   const orgId = req.user.organisationId
-  const { name, location_id, ingredients } = req.body
+  const { name, location_id, selling_price, ingredients } = req.body
 
   if (!name || !location_id || !Array.isArray(ingredients) || ingredients.length === 0) {
     return res.status(400).json({ error: 'name, location_id, and at least one ingredient are required.' })
@@ -189,8 +189,8 @@ async function updateRecipe(req, res, next) {
     }
 
     await client.query(
-      'UPDATE recipes SET name = $1, location_id = $2 WHERE id = $3 AND organisation_id = $4',
-      [name, location_id, recipeId, orgId]
+      'UPDATE recipes SET name = $1, location_id = $2, selling_price = $3 WHERE id = $4 AND organisation_id = $5',
+      [name, location_id, Number(selling_price) || 0, recipeId, orgId]
     )
 
     // Replace all ingredients

@@ -78,6 +78,7 @@ export const getRecipes = () => request<Recipe[]>('/restaurant/recipes')
 export const createRecipe = (data: {
   name: string
   location_id: number
+  selling_price?: number
   ingredients: { product_id: number; quantity_required: number }[]
 }) =>
   request<Recipe>('/restaurant/recipes', {
@@ -88,6 +89,7 @@ export const createRecipe = (data: {
 export const updateRecipe = (id: number, data: {
   name: string
   location_id: number
+  selling_price?: number
   ingredients: { product_id: number; quantity_required: number }[]
 }) =>
   request<{ success: boolean }>(`/restaurant/recipes/${id}`, {

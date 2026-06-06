@@ -62,6 +62,7 @@ export interface Recipe {
   location_name: string
   ingredients: RecipeIngredient[]
   food_cost: number
+  selling_price: number
 }
 
 export interface Location {

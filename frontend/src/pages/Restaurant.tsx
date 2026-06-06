@@ -178,9 +178,25 @@ function RecipeCard({ recipe, onServe, onEdit, onDelete }: {
             <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">{recipe.location_name}</p>
           </div>
           <div className="flex items-center gap-1">
-            <div className="text-right mr-2">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.06em] text-zinc-400 dark:text-zinc-500">Food cost</p>
-              <p className="text-sm font-bold text-zinc-900 dark:text-zinc-100">£{recipe.food_cost.toFixed(2)}</p>
+            <div className="text-right mr-2 space-y-1">
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.06em] text-zinc-400 dark:text-zinc-500">Food cost</p>
+                <p className="text-sm font-bold text-zinc-900 dark:text-zinc-100">£{recipe.food_cost.toFixed(2)}</p>
+              </div>
+              {Number(recipe.selling_price) > 0 && (
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.06em] text-zinc-400 dark:text-zinc-500">Sell price</p>
+                  <p className="text-sm font-bold text-green-600 dark:text-green-400">£{Number(recipe.selling_price).toFixed(2)}</p>
+                </div>
+              )}
+              {Number(recipe.selling_price) > 0 && Number(recipe.selling_price) > recipe.food_cost && (
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.06em] text-zinc-400 dark:text-zinc-500">Margin</p>
+                  <p className="text-sm font-bold text-blue-600 dark:text-blue-400">
+                    {(((Number(recipe.selling_price) - recipe.food_cost) / Number(recipe.selling_price)) * 100).toFixed(0)}%
+                  </p>
+                </div>
+              )}
             </div>
             <button
               onClick={onEdit}
@@ -294,6 +310,9 @@ function RecipeForm({
   const [locationId, setLocationId] = useState<number | ''>(
     existing?.location_id ?? (locations.length > 0 ? locations[0].id : '')
   )
+  const [sellingPrice, setSellingPrice] = useState(
+    existing?.selling_price ? String(existing.selling_price) : ''
+  )
   const [ingredients, setIngredients] = useState<IngredientRow[]>(
     existing?.ingredients?.length
       ? existing.ingredients.map(i => ({ product_id: i.product_id, quantity_required: String(i.quantity_required) }))
@@ -336,6 +355,7 @@ function RecipeForm({
     const payload = {
       name,
       location_id: locationId as number,
+      selling_price: sellingPrice ? Number(sellingPrice) : 0,
       ingredients: ingredients.map((ing) => ({
         product_id: ing.product_id as number,
         quantity_required: Number(ing.quantity_required),
@@ -389,6 +409,25 @@ function RecipeForm({
               ))}
             </select>
           </div>
+        </div>
+
+        <div>
+          <label className="block text-xs font-semibold uppercase tracking-[0.06em] text-zinc-400 dark:text-zinc-500 mb-1.5">
+            Selling Price (£)
+          </label>
+          <div className="relative">
+            <span className="absolute inset-y-0 left-3 flex items-center text-sm text-zinc-400 pointer-events-none">£</span>
+            <input
+              type="number"
+              min="0"
+              step="0.01"
+              value={sellingPrice}
+              onChange={(e) => setSellingPrice(e.target.value)}
+              className={`${inputClass} pl-7`}
+              placeholder="0.00"
+            />
+          </div>
+          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-500">The price customers pay for this dish</p>
         </div>
 
         <div>
