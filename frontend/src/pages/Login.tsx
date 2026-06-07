@@ -13,18 +13,8 @@ export default function Login() {
   const [error, setError]       = useState<string | null>(null)
   const [loading, setLoading]   = useState(false)
 
-  // Server status: 'connecting' | 'slow' | 'ready'
-  const [serverStatus, setServerStatus] = useState<'connecting' | 'slow' | 'ready'>('connecting')
-
-  useEffect(() => {
-    // Show "slow" message after 2s if still connecting (Render cold start)
-    const slowTimer = setTimeout(() => setServerStatus('slow'), 2000)
-    ping().then(() => {
-      clearTimeout(slowTimer)
-      setServerStatus('ready')
-    })
-    return () => clearTimeout(slowTimer)
-  }, [])
+  // Silently pre-warm the Render backend on mount (no UI shown)
+  useEffect(() => { ping() }, [])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -63,23 +53,6 @@ export default function Login() {
             <h1 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">Sign in to StockSense Pro</h1>
             <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">Enter your credentials to continue</p>
           </div>
-
-          {/* Server warm-up banner */}
-          {serverStatus !== 'ready' && (
-            <div className={`mb-4 flex items-center gap-2 rounded-lg px-3.5 py-2.5 text-xs font-medium ${
-              serverStatus === 'slow'
-                ? 'bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-400'
-                : 'bg-zinc-100 dark:bg-zinc-700/50 border border-zinc-200 dark:border-zinc-600 text-zinc-500 dark:text-zinc-400'
-            }`}>
-              <svg className="h-3.5 w-3.5 animate-spin shrink-0" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
-              </svg>
-              {serverStatus === 'slow'
-                ? 'Server is warming up — this takes ~20s on first load…'
-                : 'Connecting to server…'}
-            </div>
-          )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
