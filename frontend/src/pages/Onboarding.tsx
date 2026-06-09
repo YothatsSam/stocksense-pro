@@ -399,7 +399,7 @@ export default function Onboarding() {
         {step < 3 && (
           <p className="mt-4 text-center text-sm text-zinc-400">
             Want to skip setup?{' '}
-            <Link to="/" className="font-medium text-brand-600 hover:text-brand-700 transition-colors">
+            <Link to="/dashboard" className="font-medium text-brand-600 hover:text-brand-700 transition-colors">
               Go to dashboard
             </Link>
           </p>
